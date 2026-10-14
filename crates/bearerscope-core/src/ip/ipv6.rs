@@ -1,0 +1,139 @@
+use std::net::Ipv6Addr;
+use crate::{ip::port::*, types::Ip6Info};
+use crate::types::*;
+
+fn parse_ipv6_ext(mut next_hdr: usize, packet: &[u8]) {
+    let mut offset = 0;
+
+    // extension header가 계속 있는 동안 반복
+    while let Some(name) = v6_ext_hdr_to_str(next_hdr) {
+        println!("Found extension header: {}", name);
+
+         if packet.len() < offset + 2 {
+            println!("Malformed packet");
+            return;
+        }
+
+        let _ext_hdr_type = packet[offset];
+        // 실제 헤더 길이 가져오기 (필드는 offset+1 위치에 있음)
+        let hdr_len = packet[offset + 1] as usize;
+        let hdr_total = (hdr_len + 1) * 8;
+
+        if packet.len() < offset + hdr_total {
+            println!("Truncated extension header");
+            return;
+        }
+
+        offset += hdr_total;
+
+        next_hdr = packet[offset] as usize; // 다음 헤더 값 업데이트
+    }
+
+    println!("No more extension headers. Next protocol = {}", next_hdr);
+}
+
+
+pub fn parse_ipv6_simple(ip_hdr: &[u8], packet: &mut PacketSummary) -> usize
+{
+    let mut offset: usize = 0;
+
+    offset += 4;
+    offset += 2;
+
+    let next_hdr = ip_hdr[offset] as usize;
+    offset += 1;
+    offset += 1;
+
+    // let mut str_proto = String::new();
+    if let Some(v) = protocol_to_str(next_hdr) {
+        // str_proto = v;
+        packet.protocol.push_str(&v);
+    }
+    else {
+        eprintln!("[parse_ipv6_simple] Unknown protocol type {}", next_hdr);
+    }
+
+    let mut src_addr6 = Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0);
+    if let Ok(v) = ip_hdr[offset..offset+15].try_into() {
+        src_addr6  = Ipv6Addr::from_octets(v);
+    }
+    else {
+        eprintln!("failure to read src addr")
+    }
+    offset += 16;
+
+    let mut dst_addr6 = Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0);
+    if let Ok(v) = ip_hdr[offset..offset+15].try_into() {
+        dst_addr6  = Ipv6Addr::from_octets(v);
+    }
+    else {
+        eprintln!("failure to read dst addr")
+    }
+
+    packet.src_ip.push_str(&src_addr6.to_string());
+    packet.dst_ip.push_str(&dst_addr6.to_string());
+
+    next_hdr
+}
+
+
+pub fn parse_ipv6(ip_hdr: &[u8], ip: &mut Ip6Info) -> usize
+{
+    let mut offset: usize = 0;
+    ip.raw.extend_from_slice(&ip_hdr[0..40]);
+
+    let head = u32::from_be_bytes([
+        ip_hdr[offset], ip_hdr[offset+1],
+        ip_hdr[offset+2], ip_hdr[offset+3],
+        ]);
+
+    let version  = ((head & 0xf0000000)>>28) as u8;
+    let tc       = ((head & 0x0ff00000)>>20) as u8;
+    let fl      = head & 0x000fffff;
+    offset += 4;
+
+    let len  = u16::from_be_bytes([
+        ip_hdr[offset], ip_hdr[offset+1], ]);
+    offset += 2;
+
+    let next_hdr = ip_hdr[offset] as usize;
+
+    let str_proto = protocol_to_str(next_hdr).unwrap_or_default(); 
+    offset += 1;
+
+    let hl = ip_hdr[offset];
+    offset += 1;
+
+    let mut src_addr6 = Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0);
+    if let Ok(v) = ip_hdr[offset..offset+15].try_into() {
+        src_addr6  = Ipv6Addr::from_octets(v);
+    }
+    else {
+        eprintln!("failure to read src addr")
+    }
+    offset += 16;
+
+    let mut dst_addr6 = Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0);
+    if let Ok(v) = ip_hdr[offset..offset+15].try_into() {
+        dst_addr6  = Ipv6Addr::from_octets(v);
+    }
+    else {
+        eprintln!("failure to read dst addr")
+    }
+    offset += 16;
+
+    if str_proto.is_empty() {
+        parse_ipv6_ext(next_hdr, &ip_hdr[offset..]);
+    }
+
+    ip.version = version;
+    ip.tc = tc;
+    ip.fl = fl;
+    ip.pl = len;
+    ip.next = next_hdr as u8;
+    ip.hop = hl;
+    ip.src_addr.push_str(&src_addr6.to_string());
+    ip.dst_addr.push_str(&dst_addr6.to_string());
+
+    next_hdr
+}
