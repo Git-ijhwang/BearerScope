@@ -153,7 +153,7 @@ pub fn get_gtp_teid<'a>(input: &'a [u8])
     else {
         (input, None)
     };
-    Ok (( input, teid.unwrap()))
+    Ok (( input, teid.unwrap_or(0)))
 }
 
 pub fn get_gtp_header(input: & [u8])

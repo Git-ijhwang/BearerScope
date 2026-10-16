@@ -7,3 +7,7 @@ license.workspace = true
 [dependencies]
 serde.workspace = true
 nom.workspace = true
+
+[features]
+default = []
+mock = []
