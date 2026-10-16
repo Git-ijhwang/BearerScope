@@ -13,7 +13,7 @@ const PCAPNG_MAGIC: [u8; 4] = [0x0A, 0x0D, 0x0D, 0x0A];
 pub struct RawPacket<'a> {
     pub timestamp: Duration,
     pub linktype: DataLink,
-    pub orig_len: i32,
+    pub orig_len: u32,
     pub data: &'a [u8],
 }
 
@@ -24,14 +24,18 @@ where
 {
     let mut pcap = PcapReader::new(reader).map_err(|e| format!("invalid pcap: {e}"))?;
 
-    let linktype = pcap.header.datalink;
+    let linktype = pcap.header().datalink;
 
+    // while let Some(pkt) = pcap.next_packet() {
     while let Some(pkt) = pcap.next_packet() {
-        let pkt = pkt.map_err(|e| format!("correupted pcap packet: {e}"))?;
+        // let pkt = pkt.map_err(|e| format!("correupted pcap packet: {e}"))?;
+        let pkt = pkt.map_err(|e| format!("corrupted pcap packet: {e}"))?;
+
         let raw = RawPacket {
             timestamp: pkt.timestamp,
             linktype,
             orig_len: pkt.orig_len,
+
             data: &pkt.data,
         };
         if f(raw).is_break() {
@@ -97,13 +101,13 @@ where
 
 pub fn for_each_packet<F>(path: &Path, mut f: F) -> Result< (), String >
 where
-    F: FnMut(RowPacket) -> ControlFlow<()>,
+    F: FnMut(RawPacket) -> ControlFlow<()>,
 {
     let file = File::open(path).map_err(|e| format!("failed to open {}: {e}", path.display()))?;
     let mut reader = BufReader::new(file);
 
     let is_pcapng = reader
-        .file_buf()
+        .fill_buf()
         .map(|buf| buf.starts_with(&PCAPNG_MAGIC))
         .map_err(|e| format!("failed to read {}: {e}", path.display()))?;
 

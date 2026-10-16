@@ -1,6 +1,6 @@
 use std::fmt::Display;
-use std::collection::HashMap;
-use std::{Serialize, Deserialize};
+use std::collections::HashMap;
+use serde::{Serialize, Deserialize};
 use crate::gtp::gtp_ie::*;
 
 
@@ -45,12 +45,12 @@ impl CallFlow {
             message: String::new(),
             ebi: None,
             bearer: None,
-            snapshot: HashMap::neW(),
+            snapshot: HashMap::new(),
         }
     }
 }
 
-#[derive(Serialize, Desrialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NodeState {
     pub ip: String,
     pub role: String,
@@ -58,9 +58,9 @@ pub struct NodeState {
 }
 
 impl NodeState {
-    pub fn new() -> Self {
+    pub fn new(ip: &str) -> Self {
         NodeState {
-            ip: String::new(),
+            ip: ip.to_string(),
             role: String::new(),
             sessions: HashMap::new(),
         }
@@ -68,7 +68,7 @@ impl NodeState {
 }
 
 
-#[derive(Serialize, Desrialize, Clone, Debug, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct EbiDetail {
     pub ebi: u8,
     pub active: bool,
@@ -82,7 +82,7 @@ impl EbiDetail {
     pub fn create_dummy_bearer (bearers: &Bearer, msg: &str, ip: &str) -> Option<Self>
     {
         let mut detail = EbiDetail {
-            ebi: bearer.ebi,
+            ebi: bearers.ebi,
             ..Default::default()
         };
 
@@ -92,7 +92,7 @@ impl EbiDetail {
     pub fn create_bearer(bearers: &Bearer, msg: &str, ip: &str) -> Option<Self>
     {
         let mut detail = EbiDetail {
-            ebi: bearer.ebi,
+            ebi: bearers.ebi,
             ..Default::default()
         };
 
