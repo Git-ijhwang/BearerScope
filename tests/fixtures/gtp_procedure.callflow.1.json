@@ -1,0 +1,735 @@
+[
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": null
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 1,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1627674836,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.3.73",
+    "ebi": null,
+    "id": 2,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 3213370471,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": 5,
+    "id": 3,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1627674836,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 3213370471,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": 5,
+    "id": 4,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": []
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 268435457,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 5,
+    "message": "Modify Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 268435457
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1627674836,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 6,
+    "message": "Modify Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 268435457
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": 5,
+    "id": 91,
+    "message": "Delete Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 268435457
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.3.73",
+    "ebi": 5,
+    "id": 92,
+    "message": "Delete Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 268435457
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3213370471
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 93,
+    "message": "Delete Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 268435457
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "IDLE",
+        "sessions": {}
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 94,
+    "message": "Delete Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "IDLE",
+        "sessions": {}
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": 5,
+    "id": 101,
+    "message": "Delete Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "IDLE",
+        "sessions": {}
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  }
+]
