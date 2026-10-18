@@ -3,7 +3,8 @@ import CallFlowGraph from "./CallFlowGraph"
 
 function CallFlowView({ data, loading, onBack }) {
 
-  const [step, setStep] = useState(data?.length || 0);
+  //const [step, setStep] = useState(data?.length || 0);
+  const [step, setStep] = useState(0);
 
   if (loading) return <div>Loading call flow...</div>;
   if (!data || data.length === 0) return <div> No Call Flow Data</div>;

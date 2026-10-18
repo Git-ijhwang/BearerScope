@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {Modal, Button} from "react-bootstrap";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
@@ -18,6 +18,9 @@ function App() {
   const [callFlowData, setCallFlowData] = useState(null);
   const [showCallFlow, setShowCallFlow] = useState(false);
   const [flowError, setFlowError] = useState(null);
+
+  const [flowKey, setFlowKey] = useState(0);
+  const flowRequestRef = useRef(0);
 
   const resetAll = () => {
     setPcapPath(null);
@@ -53,21 +56,32 @@ function App() {
   };
 
   const fetchCallFlow = async (packetId) => {
+    const requestId = ++flowRequestRef.current;
+
     setFlowError(null);
+    setCallFlowData(null);
+    setShowCallFlow(false);
+
     try {
       // Rust: call_flow(path, id) -> Vec<CallFlow>
       const data = await invoke("call_flow", { path: pcapPath, id: packetId });
+      if (requestId !== flowRequestRef.current) return;
       setCallFlowData(data);
       setShowCallFlow(true);
+      setFlowKey((k) => k + 1);
     }
     catch (err) {
+      if (requestId !== flowRequestRef.current) return;
       console.error(err);
       setFlowError(`Failed to load call flow: ${err}`);
+      setShowCallFlow(false);
     }
   };
 
 
   const handleBackFromCallFlow = () => {
+    
+    flowRequestRef.current++;
     setShowCallFlow(false);
     setCallFlowData(null);
   };
@@ -135,6 +149,7 @@ function App() {
               <div className="panel callflow-panel">
                 { CallFlowView && (
                   < CallFlowView 
+                    key={flowKey}
                     data={callFlowData}
                     loading={!callFlowData}
                     onBack={handleBackFromCallFlow} />
