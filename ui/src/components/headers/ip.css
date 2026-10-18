@@ -1,0 +1,63 @@
+.card-header {
+  /* background-color: #08f8b4  !important; */
+}
+/* .card-body { */
+  /* background-color: #767676; */
+/* } */
+
+.ip-card {
+  margin-bottom: 16px;
+}
+
+.ip-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.ip-table th,
+.ip-table td {
+  border: 1px solid #767676;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+.ip-table th {
+  background: #dce5f6;
+}
+
+/* .ip-table td {
+  background: #dedcdc;
+} */
+
+.ip-header{
+  background-color: #EFECE3 !important;
+}
+.ip-card-body, .tcp-card-body
+{
+  background-color: #d4daff !important;
+}
+
+.tcp-header{
+  background-color:  #80FFDB !important;
+}
+
+/* .ie-table {
+  table-layout: fixed;
+  width: 300px;
+  background-color: #9f3900;
+}
+
+.ie-table th {
+  width: 100px;
+  background-color: beige;
+}
+
+.ie-table td {
+  width: 200px;
+*/
+
+.ie_group {
+  background-color:burlywood !important;
+}

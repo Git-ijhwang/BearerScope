@@ -1,0 +1,18 @@
+.udp-card-header{
+  background-color: #ebf3fd;
+}
+.udp-card-body
+{
+    /* background-color: #dedede; */
+    /* background-color: #ffffff; */
+  background-color: #f4f7fb;
+}
+
+.udp-table tbody th {
+  background: #dce5f6;
+}
+.udp-table td {
+  background: #ffffff;
+}
+
+.field:hover { background: var(--field-highlight); }
