@@ -1,96 +1,53 @@
-import React, { useState, useRef } from "react";
-import CallFlowGraph from "./CallFlowGraph"
+import { useEffect, useState } from "react";
+import CallFlowGraph from "./CallFlowGraph";
 
-function CallFlowView({ data, loading, onBack }) {
-
-  //const [step, setStep] = useState(data?.length || 0);
+export default function CallFlowView({ flow, startPacket, loading, onBack }) {
+  // Always start before the first message so the bearers build up step by step
   const [step, setStep] = useState(0);
+  const total = flow?.length ?? 0;
 
-  if (loading) return <div>Loading call flow...</div>;
-  if (!data || data.length === 0) return <div> No Call Flow Data</div>;
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.target.closest?.("input[type=search], textarea")) return;
+      if (e.key === "ArrowRight") { e.preventDefault(); setStep((s) => Math.min(total, s + 1)); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); setStep((s) => Math.max(0, s - 1)); }
+      else if (e.key === "Home") setStep(0);
+      else if (e.key === "End") setStep(total);
+      else if (e.key === "Escape") onBack();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [total, onBack]);
+
+  const nodeCount = flow ? new Set(flow.flatMap((m) => [m.src_addr, m.dst_addr])).size : 0;
 
   return (
-    <div className="callflow-container" style={{ overflow: "visible" }} >
-      {onBack && (
-        <button
-          className="btn btn-sm btn-outline-secondary mb-2"
-          style={{margin:"10px"}}
-          onClick={onBack}
-        >
-          ← Back
-        </button>
-      )}
-
-      <div style={{
-        position: "sticky",    // 스크롤 시 고정
-        top: "0",             // 화면 맨 위에 붙음
-        backgroundColor: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(5px)", // 배경 블러 효과
-        // backgroundColor: "white", // 뒤에 내용이 비치지 않게 배경색 지정
-        zIndex: 1000,         // 다른 요소보다 위에 오도록 설정
-        padding: "10px 20px",    // 여백 조정
-        width: "100%",        // 전체 너비 사용
-        borderBottom: "1px solid #ddd", // 구분선 (선택사항)
-        display: "flex", 
-        flexDirection: "column", 
-        gap: "10px" 
-      }}>
-
-
-        <div style={{
-          width: "80%",
-          margin: "20px auto",
-          display: "flex", flexDirection: "column", gap: "10px" }}>
-
-          <div style={{
-            display: "flex",
-            flexDirection: "center",
-            alignItems: "center",
-            gap: "10px", }}>
-
-            <input
-              type="range"
-              min={0} max={data.length}
-              value={step}
-              onChange={e => setStep(Number(e.target.value))}
-              style={{ width: "100%", cursor: "pointer" }} />
-          </div>
-
-          <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "20px", 
-          }}>
-
-            <button
-              className="btn btn-sm btn-outline-secondary"
-              onClick={() => setStep(prev => Math.max(0, prev - 1))}
-              disabled={step === 0} >
-              <i class="bi bi-chevron-double-left"></i>
-            </button>
-
-            <div style={{ fontSize: "14px", fontWeight: "bold",
-                minWidth: "100px", textAlign: "center", }}>
-              Step {step} / {data.length}
-            </div>
-
-            <button 
-              className="btn btn-sm btn-outline-secondary"
-              onClick={() => setStep(prev => Math.min(data.length, prev + 1))}
-              disabled={step === data.length} >
-              <i class="bi bi-chevron-double-right"></i>
-            </button>
-
-          </div>
+    <section className="flow-view" aria-label="Call flow">
+      <header className="flow-head">
+        <button className="btn-back" onClick={onBack} title="Back to packets (Esc)">‹ Packets</button>
+        <div className="flow-title">
+          <h2>Call flow from packet {startPacket}</h2>
+          <span>{loading ? "Tracing the session…" : `${total} messages between ${nodeCount} nodes`}</span>
         </div>
-      </div>
 
-      <div className="graph-content" style={{ marginTop: "20px" }}>
-        <CallFlowGraph data={data} step={step} />
+        {!loading && total > 0 && (
+          <div className="stepper">
+            <button onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}
+              aria-label="Previous message" title="Previous message (←)">‹</button>
+            <input type="range" min={0} max={total} value={step}
+              onChange={(e) => setStep(Number(e.target.value))} aria-label="Step" />
+            <button onClick={() => setStep((s) => Math.min(total, s + 1))} disabled={step === total}
+              aria-label="Next message" title="Next message (→)">›</button>
+            <span className="step-label">Step <strong>{step}</strong> of {total}</span>
+          </div>
+        )}
+      </header>
+      {loading && <div className="loading-line" />}
+
+      <div className="flow-scroll">
+        {!loading && total === 0 && <div className="flow-empty">This session has no GTPv2-C messages to show.</div>}
+        {!loading && total > 0 && <CallFlowGraph flow={flow} step={step} onStep={setStep} />}
       </div>
-    </div>
+    </section>
   );
 }
-
-export default CallFlowView;

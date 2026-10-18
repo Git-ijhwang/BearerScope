@@ -1,193 +1,213 @@
-import React, { useState, useRef } from "react";
-import {Modal, Button} from "react-bootstrap";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { open } from "@tauri-apps/plugin-dialog";
-import "./App.css";
-import PacketTable from "./PacketTable"
-import CallFlowView from "./components/callflow/CallFlowView"
 
+import icon from "./assets/bearerscope-icon.svg";
+import PacketList from "./components/packets/PacketList";
+import PacketInspector from "./components/packets/PacketInspector";
+import CallFlowView from "./components/callflow/CallFlowView";
 
-function App() {
-  // 웹 버전의 File 객체 + 서버 캐시 키(fileId) 대신, 로컬 파일 경로 하나로 충분하다
+const CAPTURE_EXTENSIONS = ["pcap", "pcapng", "cap"];
+const isMac = navigator.userAgent.includes("Mac");
+const fileName = (p) => p?.split(/[\\/]/).pop();
+
+export default function App() {
   const [pcapPath, setPcapPath] = useState(null);
-  const [result, setResult] = useState(null);
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedPacket, setSelectedPacket] = useState(null);
-  const [collapsed, setCollapsed] = useState(null);
+  const [error, setError] = useState(null);
 
-  const [callFlowData, setCallFlowData] = useState(null);
-  const [showCallFlow, setShowCallFlow] = useState(false);
-  const [flowError, setFlowError] = useState(null);
+  // Packet list
+  const [filterText, setFilterText] = useState("");
+  const [proto, setProto] = useState("all");
+  const [selectedId, setSelectedId] = useState(null);
+  const [inspectorOpen, setInspectorOpen] = useState(false);
+  const [details, setDetails] = useState({}); // id -> ParsedDetail | { error }
+  const filterRef = useRef(null);
 
-  const [flowKey, setFlowKey] = useState(0);
+  // Call flow
+  const [flow, setFlow] = useState(null); // { start, data, loading }
   const flowRequestRef = useRef(0);
 
-  const resetAll = () => {
-    setPcapPath(null);
-    setResult(null);
-    setCallFlowData(null);
-    setShowCallFlow(false);
-    // 서버 임시 파일 정리(/api/cleanup)는 더 이상 필요 없다
-  };
+  // ---------------------------------------------------------------- loading
 
-  // 파일 대화상자로 pcap을 고르고 바로 분석한다 (기존: 파일 선택 → Upload & Parse 두 단계)
-  const openAndParse = async () => {
-    const path = await open({
-      multiple: false,
-      filters: [{ name: "Packet capture", extensions: ["pcap", "pcapng", "cap"] }],
-    });
-    if (!path) return; // 취소
-
+  const loadCapture = useCallback(async (path) => {
     setPcapPath(path);
     setLoading(true);
-    setResult(null);
-    setShowCallFlow(false);
-
+    setError(null);
+    setSummary(null);
+    setSelectedId(null);
+    setInspectorOpen(false);
+    setDetails({});
+    setFlow(null);
+    setFilterText("");
+    setProto("all");
     try {
-      // Rust: parse_summary(path) -> ParsedResult { file, total_packets, packets }
-      const summary = await invoke("parse_summary", { path });
-      setResult(summary);
+      setSummary(await invoke("parse_summary", { path }));
     } catch (err) {
-      console.error(err);
-      setResult({ error: String(err) });
+      setError(`Couldn't read ${fileName(path)}: ${err}`);
+      setPcapPath(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchCallFlow = async (packetId) => {
+  const chooseCapture = useCallback(async () => {
+    const path = await open({
+      multiple: false,
+      filters: [{ name: "Packet capture", extensions: CAPTURE_EXTENSIONS }],
+    });
+    if (path) loadCapture(path);
+  }, [loadCapture]);
+
+  // Dropping a capture file anywhere on the window opens it
+  const [dragOver, setDragOver] = useState(false);
+  useEffect(() => {
+    let unlisten;
+    getCurrentWebview().onDragDropEvent(({ payload }) => {
+      if (payload.type === "enter" || payload.type === "over") setDragOver(true);
+      else if (payload.type === "leave") setDragOver(false);
+      else if (payload.type === "drop") {
+        setDragOver(false);
+        const path = payload.paths?.find((p) => CAPTURE_EXTENSIONS.includes(p.split(".").pop().toLowerCase()));
+        if (path) loadCapture(path);
+        else setError("Drop a .pcap, .pcapng or .cap file to open it.");
+      }
+    }).then((fn) => { unlisten = fn; });
+    return () => unlisten?.();
+  }, [loadCapture]);
+
+  // ---------------------------------------------------------------- details
+
+  const selectPacket = useCallback((id) => {
+    setSelectedId(id);
+    setInspectorOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!inspectorOpen || selectedId == null || details[selectedId]) return;
+    let stale = false;
+    invoke("packet_detail", { path: pcapPath, id: selectedId })
+      .then((d) => !stale && setDetails((m) => ({ ...m, [selectedId]: d })))
+      .catch((e) => !stale && setDetails((m) => ({ ...m, [selectedId]: { error: String(e) } })));
+    return () => { stale = true; };
+  }, [inspectorOpen, selectedId, pcapPath, details]);
+
+  // ---------------------------------------------------------------- call flow
+
+  const openFlow = useCallback(async (id) => {
     const requestId = ++flowRequestRef.current;
-
-    setFlowError(null);
-    setCallFlowData(null);
-    setShowCallFlow(false);
-
+    setFlow({ start: id, data: null, loading: true });
     try {
-      // Rust: call_flow(path, id) -> Vec<CallFlow>
-      const data = await invoke("call_flow", { path: pcapPath, id: packetId });
+      const data = await invoke("call_flow", { path: pcapPath, id });
       if (requestId !== flowRequestRef.current) return;
-      setCallFlowData(data);
-      setShowCallFlow(true);
-      setFlowKey((k) => k + 1);
-    }
-    catch (err) {
+      setFlow({ start: id, data, loading: false });
+    } catch (err) {
       if (requestId !== flowRequestRef.current) return;
-      console.error(err);
-      setFlowError(`Failed to load call flow: ${err}`);
-      setShowCallFlow(false);
+      setFlow(null);
+      setError(`Couldn't trace a call flow from packet ${id}: ${err}`);
     }
-  };
+  }, [pcapPath]);
 
+  const closeFlow = useCallback(() => {
+    flowRequestRef.current += 1; // ignore a response that is still on its way
+    setFlow(null);
+  }, []);
 
-  const handleBackFromCallFlow = () => {
-    
-    flowRequestRef.current++;
-    setShowCallFlow(false);
-    setCallFlowData(null);
-  };
+  // ---------------------------------------------------------------- keys
 
+  useEffect(() => {
+    const onKey = (e) => {
+      const mod = isMac ? e.metaKey : e.ctrlKey;
+      if (mod && e.key.toLowerCase() === "o") { e.preventDefault(); chooseCapture(); return; }
+      if (flow) return; // the call flow view handles its own keys
+      const typing = e.target.closest?.("input, textarea");
+      if (e.key === "/" && !typing && summary) { e.preventDefault(); filterRef.current?.focus(); }
+      else if (e.key === "Escape" && typing) { e.target.blur(); }
+      else if (e.key === "Escape" && inspectorOpen) { setInspectorOpen(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [chooseCapture, flow, summary, inspectorOpen]);
+
+  // ---------------------------------------------------------------- view
+
+  const selected = summary?.packets.find((p) => p.id === selectedId);
+  const detail = details[selectedId];
 
   return (
-    <div className="container mt-4">
-      <div className="fileopen-card card shadow p-4 ">
-
-        <button type="button"
-            className= "btn btn-sm btn-outline-secondary position-absolute"
-          style={{top:"12px", right:"12px", margin:"12px"}}
-            onClick={() => setCollapsed(c => !c)}
-            aria-label="toggle collapse"
-            >
-          <i className={`bi ${collapsed ? "bi-chevron-down" : "bi-chevron-up"}`} />
+    <div className="app">
+      <header className="toolbar">
+        <div className="brand"><img src={icon} alt="" />BearerScope</div>
+        {pcapPath && summary && (
+          <div className="capture-name" title={pcapPath}>
+            <strong>{fileName(pcapPath)}</strong>
+            <span>{summary.total_packets} packets</span>
+          </div>
+        )}
+        <div className="toolbar-spacer" />
+        <button className="btn-tool" onClick={chooseCapture} disabled={loading}>
+          Open capture <kbd>{isMac ? "⌘O" : "Ctrl+O"}</kbd>
         </button>
+      </header>
 
-        <h1 className={`mb-3 parser-title
-          ${collapsed ? "collapsed" : ""}`}>pcap file Parser </h1>
-
-        {/* 🔽 Collapsible Area */}
-        <div className={`collapse-wrapper ${collapsed ? "collapsed" : ""}`} >
-
-          <div className="mb-3 text-muted small">
-            {pcapPath ?? "No capture loaded"}
-          </div>
-
-          <div>
-            <button
-                className="btn btn-primary me-3"
-                onClick={openAndParse}
-                disabled={loading} >
-
-              {loading ? "Parsing..." : "Open pcap…"}
-            </button>
-
-            <button
-              className="btn btn-secondary "
-              onClick={ resetAll }
-              disabled={loading || !pcapPath}
-            >
-              Reset
-            </button>
-
-          </div>
-        </div>
-      </div>
-
-      <div className="packetlist-card card shadow p-4">
-        {result?.error && <div className="alert alert-danger">{result.error}</div>}
-        {flowError && <div className="alert alert-warning">{flowError}</div>}
-        {result?.packets && (
-
-          <div className="viewport">
-            <div className={`slider ${showCallFlow ? "shift" : ""}`}>
-
-              {/* Table Panel */}
-              <div className="panel table-panel">
-                <PacketTable packets={result.packets} pcapPath={pcapPath}
-                    onCallFlow={fetchCallFlow}
-                    showCallFlow={showCallFlow} />
-              </div>
-
-              <div className="panel callflow-panel">
-                { CallFlowView && (
-                  < CallFlowView 
-                    key={flowKey}
-                    data={callFlowData}
-                    loading={!callFlowData}
-                    onBack={handleBackFromCallFlow} />
-                )}
-              </div>
-            </div>
+      <main className="workspace">
+        {error && (
+          <div className="banner" role="alert">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} aria-label="Dismiss">×</button>
           </div>
         )}
 
-        <Modal show={selectedPacket !== null} onHide={() => setSelectedPacket(null)} centered size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>Packet Detail (ID: {selectedPacket?.id}) </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {selectedPacket ? (
-              <div>
-                {Object.entries(selectedPacket).map(([key, value]) => (
-                  <p key={key}>
-                    <strong>{key}</strong>: {String(value)}
-                  </p>
-                ))}
-              </div>
-            ) : null
-            }
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="secondary"
-              onClick={() => setSelectedPacket(null)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-      </div>
+        {!summary ? (
+          <div className="empty">
+            <div className={`dropzone ${dragOver ? "is-over" : ""}`}>
+              <img src={icon} alt="" />
+              <h1>{loading ? `Reading ${fileName(pcapPath)}…` : "Open a capture to start"}</h1>
+              <p>
+                BearerScope decodes GTPv2-C and PFCP signaling and shows how each
+                bearer is set up, modified and released.
+              </p>
+              <button className="btn-primary-solid" onClick={chooseCapture} disabled={loading}>
+                {loading ? "Reading…" : "Open capture"}
+              </button>
+              <p className="hint">Or drop a .pcap or .pcapng file here.</p>
+            </div>
+          </div>
+        ) : flow ? (
+          <CallFlowView
+            key={`${flow.start}-${flow.loading}`}
+            flow={flow.data}
+            startPacket={flow.start}
+            loading={flow.loading}
+            onBack={closeFlow}
+          />
+        ) : (
+          <div className={`packets-view ${inspectorOpen && selected ? "has-inspector" : ""}`}>
+            <PacketList
+              packets={summary.packets}
+              selectedId={selectedId}
+              onSelect={selectPacket}
+              onOpenFlow={openFlow}
+              filterText={filterText}
+              onFilterText={setFilterText}
+              proto={proto}
+              onProto={setProto}
+              filterRef={filterRef}
+            />
+            {inspectorOpen && selected && (
+              <PacketInspector
+                summary={selected}
+                detail={detail?.error ? null : detail}
+                error={detail?.error}
+                loading={!detail}
+                onClose={() => setInspectorOpen(false)}
+              />
+            )}
+          </div>
+        )}
+      </main>
     </div>
   );
 }
-
-export default App;
-
