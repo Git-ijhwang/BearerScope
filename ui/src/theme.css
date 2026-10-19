@@ -529,7 +529,8 @@ body {
 .lane-head text.addr { font: 12px var(--font-data); fill: var(--ink-3); }
 
 .tunnel-label { font: 500 11.5px var(--font-ui); }
-.tunnel-teid { font: 11px var(--font-data); fill: var(--ink-2); }
+.tunnel-teid { font: 11.5px var(--font-data); fill: var(--ink); }
+.tunnel-key { font: 500 10.5px var(--font-ui); fill: var(--ink-3); }
 .tunnel-state { font: 500 11px var(--font-ui); }
 
 .msg-row { cursor: pointer; }
@@ -545,3 +546,32 @@ body {
   text-align: center;
   color: var(--ink-2);
 }
+
+/* IP/UDP folded under the signaling message */
+.layer-group {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+.layer-group > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-2);
+}
+.layer-group > summary::-webkit-details-marker { display: none; }
+.layer-group > summary::before {
+  content: "›";
+  display: inline-block;
+  width: 10px;
+  color: var(--ink-3);
+  transition: transform 120ms;
+}
+.layer-group[open] > summary::before { transform: rotate(90deg); }
+.layer-group-title { font-weight: 600; color: var(--ink); }
+.layer-group-body { padding: 0 12px 12px; }
+.inspector-body > .layer-group + .layer-group { margin-top: 8px; }
+.layer-group-body > * + * { margin-top: 12px; }

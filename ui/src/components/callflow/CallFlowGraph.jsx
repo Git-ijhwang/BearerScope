@@ -4,7 +4,7 @@ import { flowNodes, hex, laneNames, tunnelsAt } from "./flowModel";
 const ROW_H = 44;
 const MARGIN_L = 112;
 const MARGIN_R = 72;
-const TUNNEL_ROW_H = 58;
+const TUNNEL_ROW_H = 84;
 
 const STATE_STYLE = {
   up: { stroke: "var(--tunnel)", fill: "var(--tunnel-soft)", dash: null, text: "Up" },
@@ -22,6 +22,23 @@ function useWidth(ref) {
     return () => ro.disconnect();
   }, [ref]);
   return w;
+}
+
+/** TEID and transport address of one tunnel end, written next to its node */
+function Endpoint({ ep, x, y, toLeft, color }) {
+  const tx = x + (toLeft ? -10 : 10);
+  const anchor = toLeft ? "end" : "start";
+  return (
+    <g>
+      <circle cx={x} cy={y} r={5} fill="var(--surface)" stroke={color} strokeWidth={2} />
+      <text className="tunnel-teid" x={tx} y={y + 24} textAnchor={anchor}>
+        <tspan className="tunnel-key">TEID </tspan>{hex(ep.teid)}
+      </text>
+      <text className="tunnel-teid" x={tx} y={y + 39} textAnchor={anchor}>
+        <tspan className="tunnel-key">IP </tspan>{ep.ip}
+      </text>
+    </g>
+  );
 }
 
 function Tunnel({ t, x, y }) {
@@ -46,10 +63,8 @@ function Tunnel({ t, x, y }) {
         <line x1={x1 + 14} x2={x2 - 14} y1={y} y2={y} stroke="var(--signal)" strokeWidth={4}
           strokeLinecap="round" strokeDasharray="0.1 18" />
       )}
-      {t.a && <text className="tunnel-teid" x={ax + (both && ax > bx ? -10 : 10)} y={y + 22}
-        textAnchor={both && ax > bx ? "end" : "start"}>{hex(t.a.teid)}</text>}
-      {t.b && <text className="tunnel-teid" x={bx + (both && bx > ax ? -10 : 10)} y={y + 22}
-        textAnchor={both && bx > ax ? "end" : "start"}>{hex(t.b.teid)}</text>}
+      {t.a && <Endpoint ep={t.a} x={ax} y={y} toLeft={both && ax > bx} color={st.stroke} />}
+      {t.b && <Endpoint ep={t.b} x={bx} y={y} toLeft={both && bx > ax} color={st.stroke} />}
     </g>
   );
 }
