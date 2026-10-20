@@ -1,8 +1,9 @@
 /* global BigInt */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useId, useMemo } from "react";
 import BitGridHeader from '../common/BitGridHeader';
 import HexDump from '../common/HexDump';
+import { ieOffsets } from '../common/ieOffsets';
 import PfcpIeViewer from './PfcpIeViewer';
 import PfcpIeTable from './PfcpIeTable';
 import "./PfcpViewer.css";
@@ -11,18 +12,13 @@ import "./PfcpViewer.css";
 
 export default function PfcpHeader({ pfcp }) {
   const [viewMode, setViewMode] = useState("decoded");
+  const switchId = useId(); // unique per card, so each label toggles its own switch
   const [hoveredRaw, setHoveredRaw] = useState(null); // ★ hover 상태
-  const [hoverTop, setHoverTop] = useState(0);  // 두 번째 HexDump top
-  const fullHexRef = useRef();
+  const offsets = useMemo(() => ieOffsets(pfcp?.raw || [], pfcp?.ies, (pfcp?.raw?.[0] & 0x01) ? 16 : 8), [pfcp]);
+  const highlight = hoveredRaw && offsets.has(hoveredRaw)
+    ? { start: offsets.get(hoveredRaw), length: hoveredRaw.length } : null;
   const high = Number((BigInt(pfcp.seid) >> 32n) & 0xffffffffn);
   const low  = Number(BigInt(pfcp.seid) & 0xffffffffn);
-
-  useEffect(() => {
-
-    if (fullHexRef.current) {
-      setHoverTop(fullHexRef.current.offsetHeight + 12); // 12px gap
-    }
-  }, [viewMode, pfcp.raw]); // 메시지가 바뀌면 갱신
 
   if (!pfcp) return null;
 
@@ -38,7 +34,7 @@ export default function PfcpHeader({ pfcp }) {
         <div className="form-check form-switch d-inline-flex align-items-center ms-3"
           style={{ fontSize: "14px" }} >
 
-          <label className="form-check-label me-5" htmlFor="gtpSwitch">
+          <label className="form-check-label me-5" htmlFor={switchId}>
             {viewMode === "raw" ? "Raw" : "Decoded"}
           </label>
 
@@ -46,7 +42,7 @@ export default function PfcpHeader({ pfcp }) {
             className="form-check-input"
             type="checkbox"
             role="switch"
-            id="gtpSwitch"
+            id={switchId}
             checked={viewMode === "raw"}
             onChange={() =>
               setViewMode(viewMode === "raw" ? "decoded" : "raw")
@@ -58,8 +54,8 @@ export default function PfcpHeader({ pfcp }) {
       <div className="card-body pfcp-card-body">
         {viewMode === "raw" ? (
 
-          <div style={{ display: "flex", gap: "15px" }}>
-            <div style={{ flex: "0 0 600px" }}>
+          <div className="raw-layout">
+            <div className="raw-layout-fields">
 
               <table className="table table-bordered table-sm" style={{ fontSize: "14px" }}>
                 <tbody>
@@ -128,39 +124,9 @@ export default function PfcpHeader({ pfcp }) {
               </table>
 
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: "0 0 400px" }}>
-
-              <div 
-                ref={fullHexRef}
-                style={{
-                  position: "sticky",
-                  top: "10px",
-                  height: "fit-content",
-                  overflowX: "auto",
-                  overflowY: "auto",
-                  background: "#111a23",
-                  borderRadius: "10px",
-                  padding: "8px"
-                }} >
-                <HexDump raw={pfcp.raw} />
-              </div>
-
-              {/* Hovered IE HexDump */}
-              <div
-                style={{
-                  position: "sticky",
-                  top: `${hoverTop}px`, 
-                  // maxHeight: "400px",
-                  height: "fit-content",
-                  overflowX: "auto",
-                  overflowY: "auto",
-                  background: "#1b1f27",
-                  borderRadius: "10px",
-                  padding: "8px"
-                }}
-              >
-                {hoveredRaw ? <HexDump raw={hoveredRaw} /> : <div style={{ color: "#888" }}>Hover an IE to see raw data</div>}
-              </div>
+            <div className="raw-layout-dump">
+              {/* One dump of the whole message; hovering an IE highlights its bytes */}
+              <HexDump raw={pfcp.raw} highlight={highlight} />
             </div>
           </div>
 

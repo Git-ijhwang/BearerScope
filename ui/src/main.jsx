@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import ErrorBoundary from "./components/ErrorBoundary";
+
 
 // Fonts are bundled so the desktop app looks the same offline
 import "@fontsource/ibm-plex-sans/400.css";
@@ -14,6 +16,8 @@ import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>
 );

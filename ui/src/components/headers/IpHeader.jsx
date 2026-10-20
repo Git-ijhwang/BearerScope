@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useId } from "react";
 import HexDump from '../hex-dump/HexDump';
 import BitGridHeader from './common/BitGridHeader'; // 방금 만든 파일 임포트
 import "./IpHeader.css";
@@ -8,6 +8,7 @@ const toHex = (val) => (val != null ? `0x${val.toString(16).toUpperCase()}` : "-
 
 const IpHeader = ({ ip, depth }) => {
   const [viewMode, setViewMode] = useState("decoded"); // "decoded" | "raw"
+  const switchId = useId(); // unique per card, so each label toggles its own switch
 
   if (!ip) return null;
 
@@ -28,14 +29,14 @@ const IpHeader = ({ ip, depth }) => {
           {/* <span className={`view-label ${!isRaw ? 'active' : ''}`}>Decoded</span> */}
         <div className="form-check form-switch d-inline-flex align-items-center ms-3" style={{ fontSize: "14px" }} >
 
-          <label className="form-check-label me-5" htmlFor="gtpSwitch">
+          <label className="form-check-label me-5" htmlFor={switchId}>
             {isRaw ? "Raw" : "Decoded"}
           </label>
 
           {/* <div className="form-check form-switch mx-2"> */}
             <input 
               className="form-check-input " 
-              id="gtpSwitch"
+              id={switchId}
               type="checkbox" 
               role="switch" 
               checked={isRaw}

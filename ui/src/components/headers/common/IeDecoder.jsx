@@ -1,4 +1,5 @@
 import "../gtp/GtpTable.css";
+import { decodeIeFields, valueFields } from "./ieFields";
 
 function ComponentRenderer({ comp })
 {
@@ -66,11 +67,64 @@ function ComponentRenderer({ comp })
   }
 }
 
-function IeDecoder(value, ietype, numrow=1, ieLength=0 ) {
+/** label: value lines. Grid mode (numrow > 1) fills the IE's byte rows; viewer mode is a plain block */
+function renderFields(fields, numrow) {
+  const list = (
+    <div className={numrow > 1 ? "ie-fields" : "ie-fields is-stacked"}>
+      {fields.map(([label, val], i) => (
+        <div key={i} className="ie-field">
+          <span className="ie-field-key">{label}</span>
+          <span className="ie-field-val">{String(val)}</span>
+        </div>
+      ))}
+    </div>
+  );
+  if (numrow <= 1) return list;
+  return (
+    <>
+      <tr className="value-row">
+        <td colSpan="32" className="field">{list}</td>
+      </tr>
+      {Array.from({ length: numrow - 2 }).map((_, index) => (
+        <tr key={index}>
+          <td colSpan="32" className="text-center text-gray-300 italic continuation-cell field">
+            Continuation
+          </td>
+        </tr>
+      ))}
+    </>
+  );
+}
+
+// Value kinds the core leaves undecoded; these get field-level decoding here
+const PLAIN_KINDS = ["Raw", "Uint8", "Uint16", "Uint32", "Ipv4", "Ipv6", "None"];
+const STRUCT_KINDS = ["Utf8String", "Apn", "Ambr", "BearerQoS", "FTeid", "ServingNetwork", "UserLocationInfo", "Timer"];
+
+function decodeIe(value, ietype, numrow=1, ieLength=0, raw=null, proto="gtp") {
   if (!value) return null;
 
-  const type = Object.keys(value)[0];
-  const data = value[type];
+  const type = typeof value === "string" ? value : Object.keys(value)[0];
+  const data = typeof value === "string" ? null : value[type];
+
+  if (PLAIN_KINDS.includes(type)) {
+    if (proto === "gtp" && ietype == 73) {
+      return renderFields([["EPS bearer ID", data]], numrow);
+    }
+    const fields = decodeIeFields(proto, ietype, raw, ieLength);
+    if (fields) return renderFields(fields, numrow);
+    // Unknown IE: show the number, or the bytes as hex
+    const shown = Array.isArray(data)
+      ? data.map((b) => b.toString(16).padStart(2, "0")).join(" ")
+      : data ?? "(empty)";
+    return renderFields([[type === "Raw" ? "Bytes" : "Value", shown]], numrow);
+  }
+  // Values the core already decoded: decode from the bytes where we can
+  // (more complete), otherwise list what the core gave us
+  if (STRUCT_KINDS.includes(type)) {
+    const fields = decodeIeFields(proto, ietype, raw, ieLength) ?? valueFields(proto, ietype, type, data);
+    if (fields) return renderFields(fields, numrow);
+  }
+
   const numDataRows = numrow - 1; // 실제 데이터가 차지하는 행 수
   const lastRowBytes = ieLength % 4 || 4; // 마지막 줄이 차지하는 바이트 수 (1, 2, 3, 4)
 
@@ -305,7 +359,7 @@ function IeDecoder(value, ietype, numrow=1, ieLength=0 ) {
         <div className="tft-wrapper text-left p-2"
             style={{ lineHeight: '1.4' }}>
           <div className="mb-1 border-b border-blue-100 pb-1">
-            <span className="text-blue-800">TFT Op: </span>
+            <span className="text-blue-800">TFT Op:</span> 
             {data.str_tft_op_code} [{data.tft_op_code}]
             <span className="mx-2 text-gray-300">|</span>
             Filters:  {data.num_filter}
@@ -341,6 +395,8 @@ function IeDecoder(value, ietype, numrow=1, ieLength=0 ) {
         </div>
       );
 
+      // Raw view: no byte rows to fill, just the details
+      if (numrow <= 1) return renderTftDetails();
 
   return (
     <>
@@ -540,4 +596,14 @@ function IeDecoder(value, ietype, numrow=1, ieLength=0 ) {
       );
   }
 }
+/** One malformed or unexpected IE must not take the whole screen down */
+function IeDecoder(value, ietype, numrow = 1, ieLength = 0, raw = null, proto = "gtp") {
+  try {
+    return decodeIe(value, ietype, numrow, ieLength, raw, proto);
+  } catch (err) {
+    console.error(`IE ${ietype} decode failed`, err, value);
+    return renderFields([["Decode error", String(err?.message || err)], ["Value", JSON.stringify(value)]], numrow);
+  }
+}
+
 export default IeDecoder;

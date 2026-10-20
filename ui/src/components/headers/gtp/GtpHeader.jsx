@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useId, useMemo } from "react";
 import BitGridHeader from '../common/BitGridHeader';
 import HexDump from '../common/HexDump';
+import { ieOffsets } from '../common/ieOffsets';
 import GtpIeViewer from './GtpIeViewer';
 import GtpIeTable from './GtpIeTable';
 import "./GtpViewer.css";
@@ -278,16 +279,11 @@ const IeRow = ({ label, value, bitSpan = 32 }) => (
 
 export default function GtpHeader({ gtp }) {
   const [viewMode, setViewMode] = useState("decoded");
+  const switchId = useId(); // unique per card, so each label toggles its own switch
   const [hoveredRaw, setHoveredRaw] = useState(null); // ★ hover 상태
-  const [hoverTop, setHoverTop] = useState(0);  // 두 번째 HexDump top
-  const fullHexRef = useRef();
-
-  useEffect(() => {
-
-    if (fullHexRef.current) {
-      setHoverTop(fullHexRef.current.offsetHeight + 12); // 12px gap
-    }
-  }, [viewMode, gtp.raw]); // 메시지가 바뀌면 갱신
+  const offsets = useMemo(() => ieOffsets(gtp?.raw || [], gtp?.ies, gtp?.t_flag ? 12 : 8), [gtp]);
+  const highlight = hoveredRaw && offsets.has(hoveredRaw)
+    ? { start: offsets.get(hoveredRaw), length: hoveredRaw.length } : null;
 
   if (!gtp) return null;
 
@@ -302,7 +298,7 @@ export default function GtpHeader({ gtp }) {
         <div className="form-check form-switch d-inline-flex align-items-center ms-3"
           style={{ fontSize: "14px" }} >
 
-          <label className="form-check-label me-5" htmlFor="gtpSwitch">
+          <label className="form-check-label me-5" htmlFor={switchId}>
             {viewMode === "raw" ? "Raw" : "Decoded"}
           </label>
 
@@ -310,7 +306,7 @@ export default function GtpHeader({ gtp }) {
             className="form-check-input"
             type="checkbox"
             role="switch"
-            id="gtpSwitch"
+            id={switchId}
             checked={viewMode === "raw"}
             onChange={() =>
               setViewMode(viewMode === "raw" ? "decoded" : "raw")
@@ -322,8 +318,8 @@ export default function GtpHeader({ gtp }) {
       <div className="card-body gtp-card-body">
         {viewMode === "raw" ? (
 
-          <div style={{ display: "flex", gap: "15px" }}>
-            <div style={{ flex: "0 0 600px" }}>
+          <div className="raw-layout">
+            <div className="raw-layout-fields">
 
               <table className="table table-bordered table-sm" style={{ fontSize: "14px" }}>
                 <tbody>
@@ -393,40 +389,9 @@ export default function GtpHeader({ gtp }) {
               </table>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", flex: "0 0 400px" }}>
-    
-              {/* 전체 GTP HexDump */}
-              <div 
-                ref={fullHexRef}
-                style={{
-                  position: "sticky",
-                  top: "10px",
-                  height: "fit-content",
-                  overflowX: "auto",
-                  overflowY: "auto",
-                  background: "#111a23",
-                  borderRadius: "10px",
-                  padding: "8px"
-                }} >
-                <HexDump raw={gtp.raw} />
-              </div>
-
-              {/* Hovered IE HexDump */}
-              <div
-                style={{
-                  position: "sticky",
-                  top: `${hoverTop}px`, 
-                  // maxHeight: "400px",
-                  height: "fit-content",
-                  overflowX: "auto",
-                  overflowY: "auto",
-                  background: "#1b1f27",
-                  borderRadius: "10px",
-                  padding: "8px"
-                }}
-              >
-                {hoveredRaw ? <HexDump raw={hoveredRaw} /> : <div style={{ color: "#888" }}>Hover an IE to see raw data</div>}
-              </div>
+            <div className="raw-layout-dump">
+              {/* One dump of the whole message; hovering an IE highlights its bytes */}
+              <HexDump raw={gtp.raw} highlight={highlight} />
             </div>
           </div>
 

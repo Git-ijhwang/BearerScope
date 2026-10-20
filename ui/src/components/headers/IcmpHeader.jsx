@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useId } from "react";
 import "./ip.css";
 import HexDump from '../hex-dump/HexDump';
 
 
 export default function IcmpHeader({ icmp }) {
   const [viewMode, setViewMode] = useState("decoded");
+  const switchId = useId(); // unique per card, so each label toggles its own switch
 
   if (!icmp) return null;
 
@@ -15,7 +16,7 @@ export default function IcmpHeader({ icmp }) {
         <strong>Layer 4 (Transport)</strong>
         <div className="form-check form-switch d-inline-flex align-items-center ms-3" style={{ fontSize: "14px" }} >
 
-          <label className="form-check-label me-5" htmlFor="gtpSwitch">
+          <label className="form-check-label me-5" htmlFor={switchId}>
             {viewMode === "raw" ? "Raw" : "Decoded"}
           </label>
 
@@ -23,7 +24,7 @@ export default function IcmpHeader({ icmp }) {
             className="form-check-input"
             type="checkbox"
             role="switch"
-            id="gtpSwitch"
+            id={switchId}
             checked={viewMode === "raw"}
             onChange={() =>
               setViewMode(viewMode === "raw" ? "decoded" : "raw")

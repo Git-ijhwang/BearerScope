@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useId } from "react";
 import "./ip.css";
 import HexDump from '../hex-dump/HexDump';
 
 
 export default function Ipv6Header({ ip, depth }) {
   const [viewMode, setViewMode] = useState("decoded");
+  const switchId = useId(); // unique per card, so each label toggles its own switch
 
   if (!ip) return null;
 
@@ -15,11 +16,11 @@ export default function Ipv6Header({ ip, depth }) {
         <strong>Layer 3 (IPv6)</strong>
         <div className="form-check form-switch d-inline-flex align-items-center ms-3" style={{ fontSize: "14px" }} >
 
-          <label className="form-check-label me-5" htmlFor="gtpSwitch">
+          <label className="form-check-label me-5" htmlFor={switchId}>
             {viewMode === "raw" ? "Raw" : "Decoded"}
           </label>
 
-          <input className="form-check-input" type="checkbox" role="switch" id="gtpSwitch" checked={viewMode === "raw"}
+          <input className="form-check-input" type="checkbox" role="switch" id={switchId} checked={viewMode === "raw"}
               onChange={() => setViewMode(viewMode === "raw" ? "decoded" : "raw") } />
         </div>
 

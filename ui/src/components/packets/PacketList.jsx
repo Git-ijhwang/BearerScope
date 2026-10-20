@@ -85,14 +85,19 @@ export default function PacketList({
             <thead>
               <tr>
                 <th className="col-no">No.</th>
-                <th>Source</th>
-                <th>Destination</th>
+                <th>Source IP</th>
+                <th>Destination IP</th>
+                {/*
+                <th>Source Port</th>
+                <th>Destination Port</th>
+                */}
                 <th>Protocol</th>
                 <th className="col-len">Length</th>
                 <th>Info</th>
                 <th className="col-act"><span className="visually-hidden">Actions</span></th>
               </tr>
             </thead>
+
             <tbody ref={bodyRef}>
               {visible.map((pkt) => {
                 const { text, code } = splitDescription(pkt.description);
@@ -105,8 +110,18 @@ export default function PacketList({
                     onDoubleClick={() => canOpenFlow(pkt) && onOpenFlow(pkt.id)}
                   >
                     <td className="col-no data">{pkt.id}</td>
+                    {/*
+                    <td className="col-addr"><Address ip={pkt.src_ip} /></td>
+                    <td className="col-addr"><Address ip={pkt.dst_ip} /></td>
+                    */}
                     <td className="col-addr"><Address ip={pkt.src_ip} port={pkt.src_port} /></td>
                     <td className="col-addr"><Address ip={pkt.dst_ip} port={pkt.dst_port} /></td>
+
+{/*
+                    <td className="col-port"><Address port={pkt.src_port} /></td>
+                    <td className="col-port"><Address port={pkt.dst_port} /></td>
+                    */}
+
                     <td><span className={`proto proto-${protoFamily(pkt)}`}>{protoLabel(pkt)}</span></td>
                     <td className="col-len data">{pkt.length || ""}</td>
                     <td className="col-info" title={pkt.description}>

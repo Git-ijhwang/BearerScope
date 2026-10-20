@@ -227,7 +227,7 @@ pub fn parse_gtpc_detail<'a>(input: &'a [u8])//, packet: &'a mut PacketDetail)
         seq:            head.seq,
         mp:             if head.mp_flag {head.mp} else {None},
         ies:            Vec::new(),
-        raw:            input[..head.msg_len as usize].to_vec(),
+        raw:            input[..(4 + head.msg_len as usize).min(input.len())].to_vec(),
     };
 
     Ok (( rest, info))

@@ -3,11 +3,13 @@ import IeDecoder from "../common/IeDecoder";
 
 function GtpIeSimpleTable({ ies, level = 0,onHoverRaw= () => {} })
 {
-  const bgColor=[ "#F5BABB", "#f8dfd7ff", "#245050ff" ];
+  // const bgColor=[ "#F5BABB", "#f8dfd7ff", "#245050ff" ];
+  const bgColor = [ "#ffffff", "#f3f6fa", "#e7edf9" ];
+
   const [expanded, setExpanded] = useState({});
   const toggle = (idx) => {
     setExpanded((prev) => ({
-      ...performance,
+      ...prev,
       [idx]: !prev[idx]
     }));
   };
@@ -29,6 +31,10 @@ function GtpIeSimpleTable({ ies, level = 0,onHoverRaw= () => {} })
                 key={`ie-${ie.ie_type}-${ie.instance}-${idx}`}  // ✅ 고유 key
                 style={{ fontSize: "14px", backgroundColor:bgColor[level]||"#010101" }}
                 >
+                <colgroup>
+                  <col className="ie-key-col" />
+                  <col />
+              </colgroup>
             <tbody>
 
               {!isOpen && (
@@ -39,7 +45,7 @@ function GtpIeSimpleTable({ ies, level = 0,onHoverRaw= () => {} })
                         }}
                   onClick={() => toggle(idx)}
                 >
-                  <th style={{colSpan:"2",
+                  <th colSpan={2} style={{
                           backgroundColor:bgColor[level]||"#010101", }}>
                     {isOpen ?  "▼" : "▶"} {ie.type_str}
                   </th>
@@ -77,7 +83,7 @@ function GtpIeSimpleTable({ ies, level = 0,onHoverRaw= () => {} })
                   <tr >
                     <th> Value </th>
                     <td> 
-                      {IeDecoder(ie.ie_value, ie.ie_type)}
+                      {IeDecoder(ie.ie_value, ie.ie_type, 1, ie.length, ie.raw, "gtp")}
                     </td>
                   </tr>
                 )}
@@ -86,7 +92,7 @@ function GtpIeSimpleTable({ ies, level = 0,onHoverRaw= () => {} })
                 {isGrouped && (
                   <tr >
                     <td className="ie-group" colSpan="2"
-                      style={{ paddingLeft: "10px", paddingRight: "10px", background:"#a4b1fa" }}>
+                      style={{ paddingLeft: "10px", paddingRight: "10px", background: bgColor[2] }}>
                       <b>Grouped IE Contents</b>
                       <GtpIeSimpleTable ies={subIes} level={level + 1}
                                           onHoverRaw={onHoverRaw} />

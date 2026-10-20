@@ -71,7 +71,7 @@ function PfcpIeTable({ ies, level = 0 })
           </tr>
 
           {!isGrouped && (
-            IeDecoder(ie.ie_value, ie.ie_type, lenRowSpan, ie.length )
+            IeDecoder(ie.ie_value, ie.ie_type, lenRowSpan, ie.length, ie.raw, "pfcp")
           )}
 
           {isGrouped && (

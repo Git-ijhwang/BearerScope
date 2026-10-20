@@ -575,3 +575,83 @@ body {
 .layer-group-body { padding: 0 12px 12px; }
 .inspector-body > .layer-group + .layer-group { margin-top: 8px; }
 .layer-group-body > * + * { margin-top: 12px; }
+
+/* Raw view of GTPv2-C / PFCP: field table with the hex dump beside it.
+   The dump sticks to the top of the inspector so the whole message stays in
+   view while you scroll through the IEs; when the pane is narrow it moves
+   above the table and keeps sticking there. */
+.raw-layout {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+.raw-layout-fields { flex: 1 1 280px; min-width: 0; overflow-x: auto; }
+.raw-layout-dump {
+  flex: 0 0 auto;
+  /* wide enough for 16 bytes per line when the pane allows it */
+  width: min(60%, 600px);
+  min-width: 300px;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.raw-layout-dump .hexdump {
+  max-height: calc(100vh - var(--toolbar-h) - 110px);
+  overflow: auto;
+}
+
+/* .raw-layout is the container, so only its children can be restyled here */
+@container (max-width: 760px) {
+  .raw-layout-fields { flex-basis: 100%; }
+  .raw-layout-dump {
+    order: -1;
+    width: 100%;
+    min-width: 0;
+    box-shadow: 0 8px 14px -10px rgba(20, 36, 59, 0.45);
+  }
+  .raw-layout-dump .hexdump { max-height: 42vh; }
+}
+
+.hexdump {
+  border-radius: var(--radius-s);
+  background: var(--navy-2);
+  color: #e6edf6;
+  font: 12px/1.55 var(--font-data);
+}
+.hexdump pre {
+  margin: 0;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+  white-space: pre;
+}
+.hexdump .off { color: #7f93ad; }
+.hexdump .hl { background: var(--signal); color: var(--navy-2); }
+.hexdump-caption {
+  position: sticky;
+  top: 0;
+  padding: 6px 12px;
+  background: var(--navy-2);
+  border-bottom: 1px solid rgba(234, 242, 251, 0.12);
+  color: #ffd27a;
+  font: 500 12px var(--font-ui);
+}
+.hexdump-empty { color: var(--ink-3); font-size: 12.5px; padding: 8px; }
+.hexdump-caption.is-hint { color: #9fb3cc; font-weight: 400; }
+
+/* Decoded IE fields (IeDecoder) */
+.ie-fields { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; text-align: left; padding: 2px 4px; }
+.ie-field { display: contents; }
+.ie-field-key { color: var(--ink-2); }
+.ie-field-val { font-family: "IBM Plex Mono", ui-monospace, monospace; color: var(--ink); overflow-wrap: anywhere; }
+.ie-fields.is-stacked { grid-template-columns: 1fr; gap: 0; padding: 0; }
+.ie-fields.is-stacked .ie-field-key { font-size: 11px; margin-top: 4px; }
+.ie-fields.is-stacked .ie-field-key:first-child { margin-top: 0; }
+
+
+/* Raw view IE cards: same key column width in every card */
+.ie-table { table-layout: fixed; width: 100%; }
+.ie-table .ie-key-col { width: 96px; }
+.ie-table td { overflow-wrap: anywhere; }

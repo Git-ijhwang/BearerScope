@@ -122,7 +122,7 @@ pub fn parse_pfcp_detail<'a>(input: &'a[u8]) -> IResult<&'a[u8], PfcpInfo>
         seq: head.seq,
         mp: head.mp,
         ies: Vec::new(),
-        raw: input[..head.msg_len as usize].to_vec(),
+        raw: input[..(4 + head.msg_len as usize).min(input.len())].to_vec(),
     };
 
     Ok ((rest, info))
