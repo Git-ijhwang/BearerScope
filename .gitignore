@@ -23,5 +23,7 @@ rustc-ice-*.txt
 
 # Packet Captures
 *.pcap
+!tests/fixtures/*.pcap
+
 
 .vscode/
