@@ -655,3 +655,13 @@ body {
 .ie-table { table-layout: fixed; width: 100%; }
 .ie-table .ie-key-col { width: 96px; }
 .ie-table td { overflow-wrap: anywhere; }
+
+
+
+/* Inspector header buttons: pop-out, close */
+.inspector-actions { margin-left: auto; display: flex; gap: 2px; }
+.inspector-actions .close { margin-left: 0; }
+
+/* A packet opened in its own window */
+.packet-window { height: 100%; display: flex; flex-direction: column; }
+.packet-window .inspector { flex: 1; }

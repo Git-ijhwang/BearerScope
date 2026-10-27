@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import ErrorBoundary from "./components/ErrorBoundary";
+import PacketWindow  from "./components/packets/PacketWindow";
 
 
 // Fonts are bundled so the desktop app looks the same offline
@@ -14,10 +15,14 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./theme.css";
 import App from "./App";
 
+const params = new URLSearchParams(window.location.search);
+const root = params.get("view") === "packet" ? <PacketWindow params={params} /> : <App />;
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      {root}
     </ErrorBoundary>
   </React.StrictMode>
 );

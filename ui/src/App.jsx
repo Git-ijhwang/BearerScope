@@ -7,6 +7,8 @@ import icon from "./assets/bearerscope-icon.svg";
 import PacketList from "./components/packets/PacketList";
 import PacketInspector from "./components/packets/PacketInspector";
 import CallFlowView from "./components/callflow/CallFlowView";
+import { openPacketWindow } from "./components/packets/openPacketWindow";
+
 
 const CAPTURE_EXTENSIONS = ["pcap", "pcapng", "cap"];
 const isMac = navigator.userAgent.includes("Mac");
@@ -93,6 +95,11 @@ export default function App() {
       .catch((e) => !stale && setDetails((m) => ({ ...m, [selectedId]: { error: String(e) } })));
     return () => { stale = true; };
   }, [inspectorOpen, selectedId, pcapPath, details]);
+
+  const popOut = useCallback((pkt) => {
+    openPacketWindow(pcapPath, pkt)
+      .catch((e) => setError(`Couldn't open packet ${pkt.id} in a new window: ${e}`));
+  }, [pcapPath]);
 
   // ---------------------------------------------------------------- call flow
 
@@ -195,6 +202,7 @@ export default function App() {
               proto={proto}
               onProto={setProto}
               filterRef={filterRef}
+              onOpenWindow={popOut}
             />
             {inspectorOpen && selected && (
               <PacketInspector
@@ -203,6 +211,7 @@ export default function App() {
                 error={detail?.error}
                 loading={!detail}
                 onClose={() => setInspectorOpen(false)}
+                onPopOut={() => popOut(selected)}
               />
             )}
           </div>

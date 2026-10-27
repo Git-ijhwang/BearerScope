@@ -13,7 +13,7 @@ function Address({ ip, port }) {
 }
 
 export default function PacketList({
-  packets, selectedId, onSelect, onOpenFlow, filterText, onFilterText, proto, onProto, filterRef,
+  packets, selectedId, onSelect, onOpenFlow, onOpenWindow, filterText, onFilterText, proto, onProto, filterRef,
 }) {
   const visible = useMemo(() => filterPackets(packets, filterText, proto), [packets, filterText, proto]);
   const counts = useMemo(() => {
@@ -41,9 +41,13 @@ export default function PacketList({
     else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
     else if (e.key === "Enter") {
       const pkt = visible.find((p) => p.id === selectedId);
-      if (pkt && canOpenFlow(pkt)) onOpenFlow(pkt.id);
+      if (!pkt) return;
+      if (e.shiftKey) onOpenWindow(pkt);
+      else if (canOpenFlow(pkt)) onOpenFlow(pkt.id);
     }
   };
+
+
 
   return (
     <section className="list-pane" aria-label="Packets">
@@ -107,7 +111,8 @@ export default function PacketList({
                     data-id={pkt.id}
                     aria-selected={pkt.id === selectedId}
                     onClick={() => onSelect(pkt.id)}
-                    onDoubleClick={() => canOpenFlow(pkt) && onOpenFlow(pkt.id)}
+                    // onDoubleClick={() => canOpenFlow(pkt) && onOpenFlow(pkt.id)}
+                    onDoubleClick={() => onOpenWindow(pkt)}
                   >
                     <td className="col-no data">{pkt.id}</td>
                     {/*

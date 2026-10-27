@@ -17,3 +17,6 @@ nom="8"
 pcap-file = "2"
 
 clap = { version = "4", features = ["derive"]}
+
+[profile.release.package.bearerscope-app]
+opt-level = 2

@@ -1,23 +1,5 @@
-/*
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
-  tauri::Builder::default()
-    .setup(|app| {
-      if cfg!(debug_assertions) {
-        app.handle().plugin(
-          tauri_plugin_log::Builder::default()
-            .level(log::LevelFilter::Info)
-            .build(),
-        )?;
-      }
-      Ok(())
-    })
-    .run(tauri::generate_context!())
-    .expect("error while building tauri application");
-}
-*/
-
 use std::path::PathBuf;
+use tauri::Manager;
 
 use bearerscope_core::gtp::call_flow::gtp_call_flow::make_call_flow;
 use bearerscope_core::gtp::call_flow::gtp_context::CallFlow;
@@ -67,6 +49,11 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![parse_summary, packet_detail, call_flow])
+        .on_window_event(|window, event| {
+            if window.label() == "main" && matches!(event, tauri::WindowEvent::Destroyed) {
+                window.app_handle().exit(0);
+            }
+        })
         .run(tauri::generate_context!())
         .expect("error while running BearerScope");
 }

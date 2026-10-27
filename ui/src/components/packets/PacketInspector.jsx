@@ -32,7 +32,7 @@ function LayerFold({ title, line, open, children }) {
   );
 }
 
-export default function PacketInspector({ summary, detail, loading, error, onClose }) {
+export default function PacketInspector({ summary, detail, loading, error, onClose, onPopOut }) {
   const { text } = splitDescription(summary?.description);
   const app = detail?.packet.app;
   const hasApp = Boolean(app?.GTP || app?.PFCP);
@@ -53,7 +53,25 @@ export default function PacketInspector({ summary, detail, loading, error, onClo
             </div>
           )}
         </div>
-        <button className="close" onClick={onClose} aria-label="Close packet details" title="Close (Esc)">×</button>
+        {/* <button className="close" onClick={onClose} aria-label="Close packet details" title="Close (Esc)">×</button> */}
+
+        <div className="inspector-actions">
+          {onPopOut && (
+            <button className="close" onClick={onPopOut} aria-label="Open in a new window"
+              title="Open in a new window (double-click a packet)">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M9 2.5h4.5V7" />
+                <path d="M13.5 2.5 7.5 8.5" />
+                <path d="M12 9.5v3a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3" />
+              </svg>
+            </button>
+          )}
+          <button className="close" onClick={onClose} aria-label="Close packet details" title="Close (Esc)">×</button>
+        </div>
+
+
+        
       </header>
       {loading && <div className="loading-line" />}
 
