@@ -223,16 +223,19 @@ pub fn decode_mcc_mnc(d1: u8, d2: u8, d3: u8)
     -> (String, String)
 {
     let mcc = format!("{}{}{}", d1 & 0x0F, d1 >> 4, d2 & 0x0F);
-    let mnc1 = d2 >> 4;
-    let mnc2 = d3 & 0x0F;
-    let mnc3 = d3 >> 4;
+    // let mnc1 = d2 >> 4;
+    // let mnc2 = d3 & 0x0F;
+    // let mnc3 = d3 >> 4;
+    let mnc3 = d2 >> 4;
 
     let mnc = if mnc3 == 0xF {
         // MNC = 2-digit
-        format!("{}{}", mnc1, mnc2)
+        // format!("{}{}", mnc1, mnc2)
+        format!("{}{}", d3 & 0x0F, d3>>4)
     } else {
         // MNC = 3-digit
-        format!("{}{}{}", mnc1, mnc2, mnc3)
+        // format!("{}{}{}", mnc1, mnc2, mnc3)
+        format!("{}{}{}", d3 & 0x0F, d3>>4, mnc3)
     };
 
     (mcc, mnc)
@@ -868,27 +871,32 @@ pub fn decode_bcd<T>(input: &[u8])
         return Err("BCD input empty".into());
     }
 
-    let mut digits = String::new();
+    // let mut digits = String::new();
 
-    for (i, byte) in input.iter().enumerate() {
-        let low = byte & 0x0F;
-        let high = (byte >> 4) & 0x0F;
+    // for (i, byte) in input.iter().enumerate() {
+        // let low = byte & 0x0F;
+        // let high = (byte >> 4) & 0x0F;
 
         // 첫 바이트 high nibble은 Odd/Even indicator라 스킵해도 됨.
-        if i == 0 {
+        // if i == 0 {
             // lower nibble = first digit
-            if low <= 9 {
-                digits.push(char::from(b'0' + low));
+            // if low <= 9 {
+                // digits.push(char::from(b'0' + low));
+    let mut digits = String::with_capacity(input.len() * 2);
+    for byte in input {
+        for nibble in [byte & 0x0F, byte>>4] {
+            if nibble <= 9 {
+                digits.push(char::from(b'0' + nibble));
             }
-            continue;
-        }
+            // continue;
+        // }
 
         // 일반 BCD 처리
-        if low <= 9 {
-            digits.push(char::from(b'0' + low));
-        }
-        if high <= 9 {
-            digits.push(char::from(b'0' + high));
+        // if low <= 9 {
+            // digits.push(char::from(b'0' + low));
+        // };
+        // if high <= 9 {;
+            // digits.push(char::from(b'0' + high));
         }
     }
 
@@ -1136,4 +1144,26 @@ pub fn parse_all_ies(mut input: &[u8])
     }
 
     Ok(result)
+}
+ #[cfg(test)]
+mod decode_tests {
+    use super::*;
+
+    #[test]
+    fn mcc_mnc_two_and_three_digit() {
+        // 450/06: MNC digit 3 is the 0xF filler
+        assert_eq!(decode_mcc_mnc(0x54, 0xF0, 0x60), ("450".into(), "06".into()));
+        // 310/410
+        assert_eq!(decode_mcc_mnc(0x13, 0x00, 0x14), ("310".into(), "410".into()));
+    }
+
+    #[test]
+    fn tbcd_keeps_every_digit() {
+        // IMSI 450061011100001 (15 digits, odd → trailing 0xF)
+        let v = decode_bcd::<GtpIe>(&[0x54, 0x00, 0x16, 0x10, 0x11, 0x00, 0x00, 0xF1]).unwrap();
+        assert!(matches!(v, IeValue::Utf8String(ref s) if s == "450061011100001"));
+        // MSISDN 821011100001 (12 digits, even)
+        let v = decode_bcd::<GtpIe>(&[0x28, 0x01, 0x11, 0x01, 0x00, 0x10]).unwrap();
+        assert!(matches!(v, IeValue::Utf8String(ref s) if s == "821011100001"));
+    }
 }

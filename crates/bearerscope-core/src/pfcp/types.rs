@@ -28,66 +28,96 @@ pub const PFCP_SESSION_DELETION_RESPONSE: u8        = 55;
 pub const PFCP_SESSION_REPORT_REQUEST: u8           = 56;
 pub const PFCP_SESSION_REPORT_RESPONSE: u8          = 57;
 
-pub static PFCP_MSG_TYPES: [&str; 57] = [
-    "PFCP Heartbeat Request",                //1
-    "PFCP Heartbeat Response",               //2
-    "PFCP PFD Management Request",           //3
-    "PFCP PFD Management Response",          //4
-    "PFCP Association Setup Reuqest",        //5
-    "PFCP Association Setup Response",       //6
-    "PFCP Association Update Request",       //7
-    "PFCP Association Update Response",      //8
-    "PFCP Association Release Request",      //9
-    "PFCP Association Release Response",     //10
-    "PFCP Version Not Suported Response",    //11
-    "PFCP Node Report Request",              //12
-    "PFCP Node Report Response",             //13
-    "PFCP Session Set Deletion Request",     //14
-    "PFCP Session Set Deletion Response",    //15
-    "PFCP Session Set Modification Request", //16
-    "PFCP Session Set Modification Response",//17
-    "PFCP Unknwon",                          //18
-    "PFCP Unknwon",                          //19
-    "PFCP Unknwon",                          //20
-    "PFCP Unknwon",                          //21
-    "PFCP Unknwon",                          //22
-    "PFCP Unknwon",                          //23
-    "PFCP Unknwon",                          //24
-    "PFCP Unknwon",                          //25
-    "PFCP Unknwon",                          //26
-    "PFCP Unknwon",                          //27
-    "PFCP Unknwon",                          //28
-    "PFCP Unknwon",                          //29
-    "PFCP Unknwon",                          //30
-    "PFCP Unknwon",                          //31
-    "PFCP Unknwon",                          //32
-    "PFCP Unknwon",                          //33
-    "PFCP Unknwon",                          //34
-    "PFCP Unknwon",                          //35
-    "PFCP Unknwon",                          //36
-    "PFCP Unknwon",                          //37
-    "PFCP Unknwon",                          //38
-    "PFCP Unknwon",                          //39
-    "PFCP Unknwon",                          //40
-    "PFCP Unknwon",                          //41
-    "PFCP Unknwon",                          //42
-    "PFCP Unknwon",                          //43
-    "PFCP Unknwon",                          //44
-    "PFCP Unknwon",                          //45
-    "PFCP Unknwon",                          //46
-    "PFCP Unknwon",                          //47
-    "PFCP Unknwon",                          //48
-    "PFCP Unknwon",                          //49
-    "PFCP Session Establishment Request",    //50
-    "PFCP Session Establishment Response",   //51
-    "PFCP Session Modification Request",     //52
-    "PFCP Session Modification Response",    //53
-    "PFCP Session Deletetion Request",       //54
-    "PFCP Session Deletetion Response",      //55
-    "PFCP Session Report Request",           //56
-    "PFCP Session Report Response",          //57
-];
+// pub static PFCP_MSG_TYPES: [&str; 57] = [
+//     "PFCP Heartbeat Request",                //1
+//     "PFCP Heartbeat Response",               //2
+//     "PFCP PFD Management Request",           //3
+//     "PFCP PFD Management Response",          //4
+//     "PFCP Association Setup Reuqest",        //5
+//     "PFCP Association Setup Response",       //6
+//     "PFCP Association Update Request",       //7
+//     "PFCP Association Update Response",      //8
+//     "PFCP Association Release Request",      //9
+//     "PFCP Association Release Response",     //10
+//     "PFCP Version Not Suported Response",    //11
+//     "PFCP Node Report Request",              //12
+//     "PFCP Node Report Response",             //13
+//     "PFCP Session Set Deletion Request",     //14
+//     "PFCP Session Set Deletion Response",    //15
+//     "PFCP Session Set Modification Request", //16
+//     "PFCP Session Set Modification Response",//17
+//     "PFCP Unknwon",                          //18
+//     "PFCP Unknwon",                          //19
+//     "PFCP Unknwon",                          //20
+//     "PFCP Unknwon",                          //21
+//     "PFCP Unknwon",                          //22
+//     "PFCP Unknwon",                          //23
+//     "PFCP Unknwon",                          //24
+//     "PFCP Unknwon",                          //25
+//     "PFCP Unknwon",                          //26
+//     "PFCP Unknwon",                          //27
+//     "PFCP Unknwon",                          //28
+//     "PFCP Unknwon",                          //29
+//     "PFCP Unknwon",                          //30
+//     "PFCP Unknwon",                          //31
+//     "PFCP Unknwon",                          //32
+//     "PFCP Unknwon",                          //33
+//     "PFCP Unknwon",                          //34
+//     "PFCP Unknwon",                          //35
+//     "PFCP Unknwon",                          //36
+//     "PFCP Unknwon",                          //37
+//     "PFCP Unknwon",                          //38
+//     "PFCP Unknwon",                          //39
+//     "PFCP Unknwon",                          //40
+//     "PFCP Unknwon",                          //41
+//     "PFCP Unknwon",                          //42
+//     "PFCP Unknwon",                          //43
+//     "PFCP Unknwon",                          //44
+//     "PFCP Unknwon",                          //45
+//     "PFCP Unknwon",                          //46
+//     "PFCP Unknwon",                          //47
+//     "PFCP Unknwon",                          //48
+//     "PFCP Unknwon",                          //49
+//     "PFCP Session Establishment Request",    //50
+//     "PFCP Session Establishment Response",   //51
+//     "PFCP Session Modification Request",     //52
+//     "PFCP Session Modification Response",    //53
+//     "PFCP Session Deletetion Request",       //54
+//     "PFCP Session Deletetion Response",      //55
+//     "PFCP Session Report Request",           //56
+//     "PFCP Session Report Response",          //57
+// ];
 
+pub fn pfcp_msg_name(msg_type: u8) -> &'static str {
+    match msg_type {
+        1 => "PFCP Heartbeat Request",
+        2 => "PFCP Heartbeat Response",
+        3 => "PFCP PFD Management Request",
+        4 => "PFCP PFD Management Response",
+        5 => "PFCP Association Setup Request",
+        6 => "PFCP Association Setup Response",
+        7 => "PFCP Association Update Request",
+        8 => "PFCP Association Update Response",
+        9 => "PFCP Association Release Request",
+        10 => "PFCP Association Release Response",
+        11 => "PFCP Version Not Supported Response",
+        12 => "PFCP Node Report Request",
+        13 => "PFCP Node Report Response",
+        14 => "PFCP Session Set Deletion Request",
+        15 => "PFCP Session Set Deletion Response",
+        16 => "PFCP Session Set Modification Request",
+        17 => "PFCP Session Set Modification Response",
+        50 => "PFCP Session Establishment Request",
+        51 => "PFCP Session Establishment Response",
+        52 => "PFCP Session Modification Request",
+        53 => "PFCP Session Modification Response",
+        54 => "PFCP Session Deletion Request",
+        55 => "PFCP Session Deletion Response",
+        56 => "PFCP Session Report Request",
+        57 => "PFCP Session Report Response",
+        _ => "PFCP Unknown",
+    }
+}
 
 // pub const PFCP_IE_RESERVED: u16         = 0;
 pub const PFCP_IE_CREATE_PDR: u16         = 1;
@@ -797,3 +827,18 @@ pub static PFCP_IE_TYPES: [(&str, bool);352] = [
 ("Mapped N6 IP Address",	false),
 ("N6 Routing Information",	false),
 ];
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pfcp_names_match_message_type() {
+        assert_eq!(pfcp_msg_name(1), "PFCP Heartbeat Request");
+        assert_eq!(pfcp_msg_name(2), "PFCP Heartbeat Response");
+        assert_eq!(pfcp_msg_name(50), "PFCP Session Establishment Request");
+        assert_eq!(pfcp_msg_name(57), "PFCP Session Report Response");
+        assert_eq!(pfcp_msg_name(0), "PFCP Unknown");
+        assert_eq!(pfcp_msg_name(255), "PFCP Unknown");
+    }
+}

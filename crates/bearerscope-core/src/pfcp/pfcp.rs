@@ -99,7 +99,8 @@ pub fn parse_pfcp<'a>(input: &'a[u8], packet: &mut PacketSummary)
     let (rest, head) = head_parser(input)?;
 
     packet.description = format!("{} [{}]",
-        PFCP_MSG_TYPES[head.msg_type as usize], head.msg_type).to_string();
+        // PFCP_MSG_TYPES[head.msg_type as usize], head.msg_type).to_string();
+        pfcp_msg_name(head.msg_type), head.msg_type).to_string();
 
     Ok((rest, head))
 }
@@ -116,7 +117,8 @@ pub fn parse_pfcp_detail<'a>(input: &'a[u8]) -> IResult<&'a[u8], PfcpInfo>
         s_flag: head.s_flag,
 
         msg_type: head.msg_type,
-        msg_type_str: PFCP_MSG_TYPES[head.msg_type as usize].to_string(),
+        // msg_type_str: PFCP_MSG_TYPES[head.msg_type as usize].to_string(),
+        msg_type_str: pfcp_msg_name(head.msg_type).to_string(),
         msg_len: head.msg_len,
         seid: head.seid,
         seq: head.seq,

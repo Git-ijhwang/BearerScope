@@ -17,8 +17,15 @@ export default function PfcpHeader({ pfcp }) {
   const offsets = useMemo(() => ieOffsets(pfcp?.raw || [], pfcp?.ies, (pfcp?.raw?.[0] & 0x01) ? 16 : 8), [pfcp]);
   const highlight = hoveredRaw && offsets.has(hoveredRaw)
     ? { start: offsets.get(hoveredRaw), length: hoveredRaw.length } : null;
-  const high = Number((BigInt(pfcp.seid) >> 32n) & 0xffffffffn);
-  const low  = Number(BigInt(pfcp.seid) & 0xffffffffn);
+
+  // const high = Number((BigInt(pfcp.seid) >> 32n) & 0xffffffffn);
+  // const low  = Number(BigInt(pfcp.seid) & 0xffffffffn);
+  const raw = pfcp?.raw || [];
+  const word = (o) => ((raw[o] << 24) | (raw[o + 1] << 16) | (raw[o + 2] << 8) | raw[o + 3]) >>> 0;
+  const hasSeid = Boolean(pfcp?.s_flag) && raw.length >= 12;
+  const high = hasSeid ? word(4) : 0;
+  const low = hasSeid ? word(8) : 0;
+  const hex8 = (n) => n.toString(16).padStart(8, "0");
 
   if (!pfcp) return null;
 
@@ -61,7 +68,7 @@ export default function PfcpHeader({ pfcp }) {
                 <tbody>
                   <tr>
                     <th colSpan="2" style={{textAlign: "Center"}}>
-                      <b>GTP Header</b>
+                      <b>PFCP Header</b>
                     </th>
                   </tr>
 
@@ -99,7 +106,7 @@ export default function PfcpHeader({ pfcp }) {
                     <tr>
                       <th>SEID</th>
                       <td>
-                        0x{ pfcp.seid }
+                        0x{hex8(high)}{hex8(low)}
                       </td>
                     </tr>
                   ) : (
@@ -109,7 +116,8 @@ export default function PfcpHeader({ pfcp }) {
                   <tr>
                     <th>Sequence</th>
                     <td>
-                      0x{ pfcp.seq }
+                      0x{(pfcp.seq ?? 0).toString(16).padStart(6, "0")}
+
                     </td>
                   </tr>
 
@@ -162,13 +170,13 @@ export default function PfcpHeader({ pfcp }) {
                   <>
                   <tr>
                     <td colSpan="32" className="field">
-                      <i>SEID[63:32]</i> : 0x{high.toString(16).padStart(8,'0')}
+                      <i>SEID[63:32]</i> : 0x{hex8(high)}
                     </td>
                   </tr>
 
                   <tr>
                     <td colSpan="32" className="field">
-                      <i>SEID[31:0]</i> : 0x{low.toString(16).padStart(8,'0')}
+                      <i>SEID[31:0]</i> : 0x{hex8(low)}
                     </td>
                   </tr>
                   </>
@@ -177,7 +185,7 @@ export default function PfcpHeader({ pfcp }) {
                 <tr>
                     <>
                       <td colSpan="24" className="field"><i>Sequence Number:0x</i>
-                        {pfcp.seq != null ? pfcp.seq.toString(16).padStart(8, "0")
+                        {pfcp.seq != null ? pfcp.seq.toString(16).padStart(6, "0")
                         // .toUpperCase()
                         : "-"}
                         {/* {pfcp.seq} */}
