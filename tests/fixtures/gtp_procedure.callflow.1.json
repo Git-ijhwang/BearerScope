@@ -13,28 +13,12 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "Unknown",
-        "sessions": {
-          "5": [
-            {
-              "active": false,
-              "delete_pending": false,
-              "ebi": 5,
-              "is_local": false,
-              "pending": true,
-              "tunnels": {
-                "s1u_enb": null,
-                "s1u_sgw": null,
-                "s5s8_pgw": null,
-                "s5s8_sgw": null
-              }
-            }
-          ]
-        }
+        "role": "SGW",
+        "sessions": {}
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Unknown",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -80,7 +64,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "Core",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -104,7 +88,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Unknown",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -125,24 +109,8 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Unknown",
-        "sessions": {
-          "5": [
-            {
-              "active": false,
-              "delete_pending": false,
-              "ebi": 5,
-              "is_local": false,
-              "pending": true,
-              "tunnels": {
-                "s1u_enb": null,
-                "s1u_sgw": null,
-                "s5s8_pgw": null,
-                "s5s8_sgw": null
-              }
-            }
-          ]
-        }
+        "role": "PGW",
+        "sessions": {}
       }
     },
     "src_addr": "10.10.1.71",
@@ -171,7 +139,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "Core",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -195,7 +163,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Unknown",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -216,7 +184,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -273,7 +241,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "Core",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -300,7 +268,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Unknown",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -321,7 +289,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -370,7 +338,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "RELAY",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -397,7 +365,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Access",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -421,7 +389,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -470,7 +438,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "RELAY",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -497,7 +465,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Access",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -521,7 +489,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -556,7 +524,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "RELAY",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -583,7 +551,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Access",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -607,7 +575,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -642,7 +610,7 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "RELAY",
+        "role": "SGW",
         "sessions": {
           "5": [
             {
@@ -669,7 +637,7 @@
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Access",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -693,7 +661,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "Core",
+        "role": "PGW",
         "sessions": {
           "5": [
             {
@@ -728,12 +696,31 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "IDLE",
-        "sessions": {}
+        "role": "SGW",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1627674836
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "Access",
+        "role": "MME",
         "sessions": {
           "5": [
             {
@@ -757,7 +744,7 @@
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "IDLE",
+        "role": "PGW",
         "sessions": {}
       }
     },
@@ -773,17 +760,17 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "IDLE",
+        "role": "SGW",
         "sessions": {}
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "IDLE",
+        "role": "MME",
         "sessions": {}
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "IDLE",
+        "role": "PGW",
         "sessions": {}
       }
     },
@@ -799,17 +786,17 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "IDLE",
+        "role": "SGW",
         "sessions": {}
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "IDLE",
+        "role": "MME",
         "sessions": {}
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "IDLE",
+        "role": "PGW",
         "sessions": {}
       }
     },
@@ -825,17 +812,17 @@
     "snapshot": {
       "10.10.1.71": {
         "ip": "10.10.1.71",
-        "role": "IDLE",
+        "role": "SGW",
         "sessions": {}
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
-        "role": "IDLE",
+        "role": "MME",
         "sessions": {}
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
-        "role": "IDLE",
+        "role": "PGW",
         "sessions": {}
       }
     },

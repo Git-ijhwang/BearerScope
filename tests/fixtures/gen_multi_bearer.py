@@ -1,6 +1,7 @@
 """GTPv2-C capture for the old make_mock_callflow() scenario (pcap_web_parser).
 
     python3 gen_multi_bearer.py multi_bearer.pcap
+    python3 gen_multi_bearer.py cups.pcap --cups
 
 One UE, MME 10.10.2.72 / SGW 10.10.1.71 / PGW 10.10.3.73 (S11 + S5/S8, no CUPS):
   1-6    Attach: Create Session (LBI 5) + Modify Bearer
@@ -10,13 +11,21 @@ One UE, MME 10.10.2.72 / SGW 10.10.1.71 / PGW 10.10.3.73 (S11 + S5/S8, no CUPS):
   21-24  Delete Session for the second PDN (LBI 7)
 
 User-plane TEIDs are the values from the mock. As in the mock, the eNodeB
-S1-U address is the MME's address (the call flow model matches a tunnel to
-a node by IP). All identifiers are test values (IMSI 001010000000001).
+S1-U address is the MME's address (kept so the capture stays as it was; the
+call flow now assigns tunnel ends by interface type). All identifiers are test values (IMSI 001010000000001).
+
+--cups: the same messages between MME / SGW-C / PGW-C, but every user-plane
+F-TEID (S1-U, S5/S8-U) carries the address of the SGW-U 10.10.11.71, the
+PGW-U 10.10.13.73 or the eNodeB 10.10.20.1, as the user-plane functions
+allocate them over PFCP. No GTP-C node owns a tunnel address.
 """
 import struct, sys
 
 MME, SGW, PGW = "10.10.2.72", "10.10.1.71", "10.10.3.73"
 ENB = MME
+CUPS = "--cups" in sys.argv[2:]
+# Address carried in user-plane F-TEIDs (interface types 0, 1, 4, 5)
+USER_PLANE = {MME: "10.10.20.1", SGW: "10.10.11.71", PGW: "10.10.13.73"} if CUPS else {}
 
 def ip(a): return bytes(int(x) for x in a.split("."))
 
@@ -40,7 +49,10 @@ def rat(): return ie(82, bytes([6]))
 def serving_network(): return ie(83, bytes([0x00, 0xF1, 0x10]))            # MCC 001 / MNC 01
 def uli(): return ie(86, bytes([0x18]) + bytes([0x00, 0xF1, 0x10]) + struct.pack(">H", 0x0001)
                      + bytes([0x00, 0xF1, 0x10]) + struct.pack(">I", 0x00012301))
-def fteid(iface, teid, addr, inst=0): return ie(87, bytes([0x80 | iface]) + struct.pack(">I", teid) + ip(addr), inst)
+def fteid(iface, teid, addr, inst=0):
+    if iface in (0, 1, 4, 5):
+        addr = USER_PLANE.get(addr, addr)
+    return ie(87, bytes([0x80 | iface]) + struct.pack(">I", teid) + ip(addr), inst)
 def bearer_ctx(*ies, inst=0): return ie(93, b"".join(ies), inst)
 def charging_id(n): return ie(94, struct.pack(">I", n))
 def charging_chars(): return ie(95, b"\x08\x00")

@@ -32,6 +32,10 @@ pub struct CallFlow {
     pub message: String,
     pub ebi: Option<u8>,
     pub bearer: Option<Vec<Bearer>>,
+    /// Control-plane F-TEIDs at the top level of the message, as
+    /// (interface type, IPv4 address). They name the node behind each address.
+    #[serde(skip)]
+    pub ctrl_fteids: Vec<(u8, String)>,
     pub snapshot: HashMap<String, NodeState>,
 }
 
@@ -45,31 +49,115 @@ impl CallFlow {
             message: String::new(),
             ebi: None,
             bearer: None,
+            ctrl_fteids: Vec::new(),
             snapshot: HashMap::new(),
         }
+    }
+}
+
+pub const ROLE_MME: &str = "MME";
+pub const ROLE_SGW: &str = "SGW";
+pub const ROLE_PGW: &str = "PGW";
+pub const ROLE_UNKNOWN: &str = "Unknown";
+
+/// Network function behind a control-plane F-TEID (TS 29.274 8.22)
+fn role_of_ctrl_iface(iface: u8) -> Option<&'static str> {
+    match iface {
+        10 => Some(ROLE_MME),       // S11 MME GTP-C
+        11 | 6 => Some(ROLE_SGW),   // S11/S4 SGW GTP-C, S5/S8 SGW GTP-C
+        7 => Some(ROLE_PGW),        // S5/S8 PGW GTP-C
+        _ => None,
+    }
+}
+
+/// Network function that owns a user-plane F-TEID. The eNodeB's S1-U end is
+/// drawn on the MME, which is the node that reports it.
+fn owner_of_user_iface(iface: u8) -> Option<&'static str> {
+    match iface {
+        0 => Some(ROLE_MME),        // S1-U eNodeB
+        1 | 4 => Some(ROLE_SGW),    // S1-U SGW, S5/S8-U SGW
+        5 => Some(ROLE_PGW),        // S5/S8-U PGW
+        _ => None,
     }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NodeState {
     pub ip: String,
+    /// "MME", "SGW", "PGW" or "Unknown"
     pub role: String,
     pub sessions: HashMap<u8, Vec<EbiDetail>>,
     /// PDN connections (by LBI) a Delete Session Request is tearing down on this
     /// node, oldest first. The Response carries no LBI, so it removes these.
     #[serde(skip)]
     pub deleting: Vec<u8>,
+    /// How sure `role` is: 0 unknown, 1 from message direction, 2 from the
+    /// node's own control-plane F-TEID. Weaker evidence never overrides stronger.
+    #[serde(skip)]
+    pub role_rank: u8,
 }
 
 impl NodeState {
     pub fn new(ip: &str) -> Self {
         NodeState {
             ip: ip.to_string(),
-            role: String::new(),
+            role: ROLE_UNKNOWN.to_string(),
             sessions: HashMap::new(),
             deleting: Vec::new(),
+            role_rank: 0,
         }
     }
+
+    fn set_role(&mut self, role: &str, rank: u8) {
+        if rank > self.role_rank {
+            self.role = role.to_string();
+            self.role_rank = rank;
+        }
+    }
+
+    fn is(&self, role: &str) -> bool {
+        self.role == role
+    }
+}
+
+/// Learn the roles of the message's two nodes before its bearers are applied.
+///  1. A control-plane F-TEID whose address is the node's names it outright
+///     (in CUPS too: GTP-C runs between SGW-C and PGW-C).
+///  2. Otherwise the direction of the procedure: a Create Session Request goes
+///     MME -> SGW -> PGW, a Create Bearer Request PGW -> SGW -> MME.
+fn learn_roles(cf: &CallFlow, state: &mut HashMap<String, NodeState>)
+{
+    for ip in [&cf.src_addr, &cf.dst_addr] {
+        let node = state.entry(ip.clone()).or_insert_with(|| NodeState::new(ip));
+        for (iface, addr) in &cf.ctrl_fteids {
+            if addr == ip {
+                if let Some(role) = role_of_ctrl_iface(*iface) {
+                    node.set_role(role, 2);
+                }
+            }
+        }
+    }
+
+    let role = |state: &HashMap<String, NodeState>, ip: &str| {
+        state.get(ip).map(|n| n.role.clone()).unwrap_or_default()
+    };
+    let src_role = role(state, &cf.src_addr);
+    let dst_role = role(state, &cf.dst_addr);
+    let (src_guess, dst_guess) = match (cf.message.as_str(), src_role.as_str(), dst_role.as_str()) {
+        ("Create Session Request", ROLE_MME, _) => (None, Some(ROLE_SGW)),
+        ("Create Session Request", ROLE_SGW, _) => (None, Some(ROLE_PGW)),
+        ("Create Session Request", _, ROLE_SGW) => (Some(ROLE_MME), None),
+        ("Create Session Request", _, ROLE_PGW) => (Some(ROLE_SGW), None),
+        ("Create Session Request", _, _) => (Some(ROLE_MME), Some(ROLE_SGW)),
+        ("Create Bearer Request", ROLE_PGW, _) => (None, Some(ROLE_SGW)),
+        ("Create Bearer Request", ROLE_SGW, _) => (None, Some(ROLE_MME)),
+        ("Create Bearer Request", _, ROLE_SGW) => (Some(ROLE_PGW), None),
+        ("Create Bearer Request", _, ROLE_MME) => (Some(ROLE_SGW), None),
+        ("Create Bearer Request", _, _) => (Some(ROLE_PGW), Some(ROLE_SGW)),
+        _ => (None, None),
+    };
+    if let (Some(r), Some(n)) = (src_guess, state.get_mut(&cf.src_addr)) { n.set_role(r, 1); }
+    if let (Some(r), Some(n)) = (dst_guess, state.get_mut(&cf.dst_addr)) { n.set_role(r, 1); }
 }
 
 
@@ -87,6 +175,21 @@ pub struct EbiDetail {
     /// Kept after the MME assigns the EBI.
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub pending_key: Option<u32>,
+}
+
+/// A node as the bearer handlers see it: its GTP-C address and its role
+pub struct NodeId {
+    pub ip: String,
+    pub role: String,
+}
+
+impl NodeId {
+    fn of(state: &HashMap<String, NodeState>, ip: &str) -> Self {
+        NodeId {
+            ip: ip.to_string(),
+            role: state.get(ip).map(|n| n.role.clone()).unwrap_or_else(|| ROLE_UNKNOWN.to_string()),
+        }
+    }
 }
 
 /// PGW S5/S8-U TEID of a bearer context still waiting for its EBI
@@ -122,7 +225,7 @@ impl EbiDetail {
         detail
     }
 
-    pub fn create_bearer(bearers: &Bearer, msg: &str, ip: &str) -> Option<Self>
+    pub fn create_bearer(bearers: &Bearer, msg: &str, node: &NodeId) -> Option<Self>
     {
         let mut detail = EbiDetail {
             ebi: bearers.ebi,
@@ -130,14 +233,18 @@ impl EbiDetail {
             ..Default::default()
         };
 
-        if detail.update_ebi(bearers, msg, ip) {
+        if detail.update_ebi(bearers, msg, node) {
             return Some(detail);
         }
 
         return None;
     }
 
-    pub fn update_ebi( &mut self, bearers: &Bearer, msg: &str, node_ip: &str)
+    /// Take the bearer's F-TEIDs that belong to `node`. Ownership follows the
+    /// interface type (S1-U/S5-U SGW ends to the SGW, and so on), not the
+    /// address: under CUPS the address is the SGW-U's or PGW-U's, not the
+    /// GTP-C node's. Only a node whose role is still unknown is matched by address.
+    pub fn update_ebi( &mut self, bearers: &Bearer, msg: &str, node: &NodeId)
     -> bool
     {
         let mut update_flag = false;
@@ -145,8 +252,13 @@ impl EbiDetail {
             for fteid_value in fteid_list {
                 let tunnel_ip = fteid_value.ipv4.as_deref().unwrap_or("0.0.0.0");
 
-                if tunnel_ip != node_ip {
-                    continue; 
+                let owned = if node.role == ROLE_UNKNOWN {
+                    tunnel_ip == node.ip
+                } else {
+                    owner_of_user_iface(fteid_value.iface_type) == Some(node.role.as_str())
+                };
+                if !owned {
+                    continue;
                 }
 
                 let endpoint = Some(TunnelEndpoint {
@@ -257,97 +369,49 @@ pub struct TunnelEndpoint {
 }
 
 
-fn identify_role(ebi_list: &mut Vec<EbiDetail>) -> String
-{
-    let mut has_s1u: bool = false;
-    let mut has_s5s8: bool = false;
-    let mut local: bool = false;
-
-    for detail in ebi_list {
-        if detail.tunnels.s1u_enb.is_some() ||
-            detail.tunnels.s1u_sgw.is_some() {
-                has_s1u = true;
-        }
-        if detail.tunnels.s5s8_pgw.is_some() ||
-            detail.tunnels.s5s8_sgw.is_some() {
-                has_s5s8 = true;
-        }
-    }
-
-    if has_s1u && has_s5s8 {
-        return "RELAY".to_string();
-    }
-    else if !has_s1u && has_s5s8 {
-        return "Core".to_string();
-    }
-    else if has_s1u && !has_s5s8 {
-        return "Access".to_string();
-    }
-
-    "Unknown".to_string()
-}
-
-
-fn handle_create_session_req_rsp( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
+fn handle_create_session_req_rsp( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
         _ => return,
     };
 
-    let src = &cf.src_addr;
-    let dst = &cf.dst_addr;
-
-    // 1. 노드 존재 확인 (없으면 생성)
-    for ip in &[src, dst] {
-        let node = state.entry(ip.to_string()).or_insert_with(|| NodeState::new(ip));
-    }
-
     for cf_b in cf_bearers {
-        //Get Info from CallFlow(cf)
         let b_ebi = cf_b.ebi;
 
-        for ip in &[src, dst] {
-            if let Some(node) = state.get_mut(*ip)  {
+        for ip in [&cf.src_addr, &cf.dst_addr] {
+            let id = NodeId::of(state, ip);
+            let Some(node) = state.get_mut(ip) else { continue };
+            let session_list = node.sessions.entry(b_ebi).or_default();
 
-                let session_list = node.sessions.entry(b_ebi).or_insert_with(||Vec::new());
+            if let Some(target_sess) = session_list.iter_mut().find(|e| e.ebi == b_ebi) {
+                target_sess.update_ebi(cf_b, &cf.message, &id);
+                continue;
+            }
 
-                let exists = session_list.iter().any(|e|e.ebi==b_ebi);
-
-                if !exists {
-                    // Both peers hold the bearer from this message on, even when
-                    // none of its F-TEIDs is theirs yet (MME before Modify Bearer)
-                    let ebi = EbiDetail::create_bearer(&cf_b, &cf.message, ip)
-                        .or_else(|| (*ip == src)
-                            .then(|| EbiDetail::create_context(&cf_b, &cf.message)));
-                    match ebi {
-                        Some(ebi) => session_list.push(ebi),
-                        None => {
-                            if session_list.is_empty() {
-                                node.sessions.remove(&b_ebi);
-                            }
-                            continue;
-                        }
+            // A node holds the bearer once one of its F-TEIDs appears, or once it
+            // sends the message itself (the MME in Create Session Request). The
+            // receiver of a request has not set it up yet.
+            let created = EbiDetail::create_bearer(cf_b, &cf.message, &id)
+                .or_else(|| (ip == &cf.src_addr)
+                    .then(|| EbiDetail::create_context(cf_b, &cf.message)));
+            match created {
+                Some(detail) => session_list.push(detail),
+                None => {
+                    if session_list.is_empty() {
+                        node.sessions.remove(&b_ebi);
                     }
                 }
-                else {
-                    if let Some(target_sess) = session_list.iter_mut().find(|e| e.ebi == b_ebi) {
-
-                        target_sess.update_ebi(&cf_b, &cf.message, ip);
-                    }
-                }
-
-                if node.role == "Unknown" || node.role.len() == 0 {
-                    node.role = identify_role(session_list );
-                }
-
             }
         }
     }
 }
 
 
-fn handle_create_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
+fn handle_create_bearer_request( cf: &CallFlow,
+                                state: &mut HashMap<String,
+                                NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
@@ -358,29 +422,29 @@ fn handle_create_bearer_request( cf: &CallFlow, state: &mut HashMap<String, Node
         Some(e) => e,
         None => return,
     };
-    
+
     for ip in [&cf.src_addr, &cf.dst_addr] {
-        if let Some(node) = state.get_mut(ip) {
+        let id = NodeId::of(state, ip);
+        let Some(node) = state.get_mut(ip) else { continue };
+        let Some(session_list) = node.sessions.get_mut(&lbi) else { continue };
 
-            if let Some(session_list) = node.sessions.get_mut(&lbi) {
-                for cf_b in cf_bearers {
-                    let is_duplicate = session_list.iter().any(|existing| {
-                        existing.ebi == 0 && existing.has_teid_match(cf_b)
-                    });
+        for cf_b in cf_bearers {
+            let is_duplicate = session_list.iter().any(|existing| {
+                existing.ebi == 0 && existing.has_teid_match(cf_b)
+            });
+            if is_duplicate {
+                continue;
+            }
 
-                    if !is_duplicate {
-                        if let Some(ebi) = EbiDetail::create_bearer(&cf_b, &cf.message, ip) {
-                            session_list.push(ebi);
-                        }
-                    }
-
-                    if node.role == "Access" {
-                        if let Some(ebi) = EbiDetail::create_dummy_bearer(&cf_b, &cf.message, ip) {
-                            session_list.push(ebi);
-                        }
-                    }
+            if let Some(ebi) = EbiDetail::create_bearer(cf_b, &cf.message, &id) {
+                session_list.push(ebi);
+            }
+            // The MME holds no tunnel end until the eNodeB answers, but it is
+            // the node that assigns the EBI: it holds the new bearer from here
+            else if id.role == ROLE_MME {
+                if let Some(ebi) = EbiDetail::create_dummy_bearer(cf_b, &cf.message, ip) {
+                    session_list.push(ebi);
                 }
-                node.role = identify_role(session_list );
             }
         }
     }
@@ -394,46 +458,68 @@ fn handle_create_bearer_response( cf: &CallFlow,
         Some(b) if !b.is_empty() => b,
         _ => return,
     };
- 
-    let src = &cf.src_addr;
-    let dst = &cf.dst_addr;
- 
-    for ip in &[src, dst] {
-        if let Some(node) = state.get_mut(*ip) {
-            for cf_b in cf_bearers {
-                let assigned_ebi = cf_b.ebi; // 새로 할당된 EBI (9, 10, 11)
-                
-                // 1. 현재 메시지에서 이 노드(ip)에 해당하는 TEID를 찾습니다.
-                let target_teid = cf_b.fteid_list.as_ref()
-                    .and_then(|list| list.iter().find(|f| f.ipv4.as_ref() == Some(*ip)))
-                    .map(|f| f.teid);
- 
-                let mut found = false;
- 
-                // 2. 모든 세션 리스트를 순회하며 매칭되는 베어러를 찾습니다.
-                for session_list in node.sessions.values_mut() {
-                    // 조건: EBI가 이미 할당되었거나, 아직 0인 베어러 중 TEID가 일치하는 것
-                    if let Some(sess) = session_list.iter_mut().find(|e| {
-                        e.ebi == assigned_ebi ||
-                        ( e.ebi == 0 && e.tunnels.has_teid_match(cf_b) ) ||
-                        ( e.ebi == 0 && node.role == "Access" )
-                    }) {
-                        sess.ebi = assigned_ebi;
-                        sess.update_ebi(cf_b, &cf.message, ip.as_str());
-                        found = true;
-                        break;
-                    }
-                    node.role = identify_role(session_list );
+
+    for ip in [&cf.src_addr, &cf.dst_addr] {
+        let id = NodeId::of(state, ip);
+        let Some(node) = state.get_mut(ip) else { continue };
+        let is_mme = id.role == ROLE_MME;
+
+        for cf_b in cf_bearers {
+            let assigned_ebi = cf_b.ebi; // 새로 할당된 EBI (9, 10, 11)
+            let mut found = false;
+
+            // 모든 세션 리스트를 순회하며 매칭되는 베어러를 찾습니다.
+            for session_list in node.sessions.values_mut() {
+                // 조건: EBI가 이미 할당되었거나, 아직 0인 베어러 중 TEID가 일치하는 것
+                // (MME의 새 bearer는 터널 끝이 없으니 순서대로)
+                if let Some(sess) = session_list.iter_mut().find(|e| {
+                    e.ebi == assigned_ebi ||
+                    ( e.ebi == 0 && e.tunnels.has_teid_match(cf_b) ) ||
+                    ( e.ebi == 0 && is_mme )
+                }) {
+                    sess.ebi = assigned_ebi;
+                    sess.update_ebi(cf_b, &cf.message, &id);
+                    found = true;
+                    break;
                 }
- 
-                if !found {
-                    println!("Warning: No matching pending bearer for EBI {} on node {}", assigned_ebi, ip);
-                    // if node.role == "Access" {
-                    //     if let Some(ebi) = EbiDetail::create_bearer(&cf_b, &cf.message, ip, true) {
-                    //         session_list.push(ebi);
-                    //     }
- 
-                    // }
+            }
+
+            if !found {
+                println!("Warning: No matching pending bearer for EBI {} on node {}", assigned_ebi, ip);
+            }
+        }
+    }
+}
+
+
+fn handle_modify_bearer_request( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState> )
+{
+    let cf_bearers = match &cf.bearer {
+        Some(b) if !b.is_empty() => b,
+        _ => return,
+    };
+
+    for ip in [&cf.src_addr, &cf.dst_addr] {
+        let id = NodeId::of(state, ip);
+        let Some(node) = state.get_mut(ip) else { continue };
+
+        for cf_b in cf_bearers {
+            let ebi = cf_b.ebi;
+            let mut found = false;
+
+            for session_list in node.sessions.values_mut() {
+                if let Some(sess) = session_list.iter_mut().find(|e| e.ebi == ebi) {
+                    sess.update_ebi(cf_b, &cf.message, &id);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Capture started after Create Session: the MME's bearer first shows here
+            if !found && (id.role == ROLE_UNKNOWN || id.role == ROLE_MME) {
+                if let Some(ebi_detail) = EbiDetail::create_bearer(cf_b, &cf.message, &id) {
+                    node.sessions.entry(ebi).or_default().push(ebi_detail);
                 }
             }
         }
@@ -441,79 +527,33 @@ fn handle_create_bearer_response( cf: &CallFlow,
 }
 
 
-fn handle_modify_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
+fn handle_modify_bearer_response( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
         _ => return,
     };
- 
+
     for ip in [&cf.src_addr, &cf.dst_addr] {
-        if let Some(node) = state.get_mut(ip) {
- 
-            for cf_b in cf_bearers {
-                let ebi = cf_b.ebi;
-                let mut found = false;
- 
-                for session_list in node.sessions.values_mut()
-                {
-                    if let Some(sess) = session_list.iter_mut().find(|e| e.ebi == ebi) {
- 
-                        sess.update_ebi( &cf_b, &cf.message, ip.as_str());
-                        node.role = identify_role(session_list );
- 
-                        found = true;
-                        break;
-                    }
-                }
- 
-                if !found {
-                    if node.role == "Unknown" || node.role == "Access" {
-                        let vec_ebi_entry = node.sessions.entry(ebi as u8).or_insert_with(||Vec::new());
- 
-                        if let Some(ebi_detail) = EbiDetail::create_bearer(&cf_b, &cf.message, ip) {
- 
-                            vec_ebi_entry.push(ebi_detail);
- 
-                            if let Some(new_list) = node.sessions.get_mut(& (ebi as u8)) {
-                                node.role = identify_role(new_list );
-                            }
-                        }
-                    }
+        let id = NodeId::of(state, ip);
+        let Some(node) = state.get_mut(ip) else { continue };
+
+        for cf_b in cf_bearers {
+            let target_ebi = cf_b.ebi;
+            for session_list in node.sessions.values_mut() {
+                if let Some(sess) = session_list.iter_mut().find(|e| e.ebi == target_ebi) {
+                    sess.update_ebi(cf_b, &cf.message, &id);
+                    break;
                 }
             }
         }
     }
 }
- 
- 
-fn handle_modify_bearer_response( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
-{
-    let cf_bearers = match &cf.bearer {
-        Some(b) if !b.is_empty() => b,
-        _ => return,
-    };
- 
-    for ip in [&cf.src_addr, &cf.dst_addr] {
-        if let Some(node) = state.get_mut(ip) {
-            // let session_list = node.sessions.entry(lbi);
- 
-            for cf_b in cf_bearers {
-                let target_ebi = cf_b.ebi;
-                for session_list in node.sessions.values_mut() {
-                    if let Some(sess) = session_list.iter_mut().find(|e| e.ebi == target_ebi) {
-                        sess.update_ebi( &cf_b, &cf.message, ip.as_str());
-                        break;
-                    }
-                    node.role = identify_role(session_list );
-                }
-            }
-        }
-    }
-}
- 
- 
-fn handle_delete_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
+
+
+fn handle_delete_bearer_request( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState>)
 {
     // Request의 ebi 필드에서 삭제할 대상을 가져옵니다.
     let target_ebi = match cf.ebi {
@@ -532,23 +572,21 @@ fn handle_delete_bearer_request( cf: &CallFlow, state: &mut HashMap<String, Node
                     set_status(sess, &cf.message);
                     break;
                 }
-                node.role = identify_role(session_list );
             }
         }
     }
 }
  
-
 impl TunnelInfo {
     fn has_s5(&self) -> bool {
         self.s5s8_sgw.is_some() || self.s5s8_pgw.is_some()
     }
- 
+
     fn is_empty(&self) -> bool {
         self.s1u_enb.is_none() && self.s1u_sgw.is_none() && !self.has_s5()
     }
 }
- 
+
 /// A Delete response finishes the release on one leg only. Its sender is done
 /// with the bearer; the receiver drops just the tunnel end facing the sender and
 /// keeps the other one (the SGW keeps S1-U after the PGW answers) until it sends
@@ -566,7 +604,7 @@ fn release_leg(receiver: &mut EbiDetail, sender: Option<&EbiDetail>) -> bool
     }
     !receiver.tunnels.is_empty()
 }
- 
+
 /// The receiver's side of a Delete response for the given (LBI, EBIs);
 /// `sender` holds the sender's bearers as they were before it dropped them
 fn release_on_receiver(node: &mut NodeState, lbi: u8, ebis: Option<&[u8]>, sender: &[EbiDetail])
@@ -583,30 +621,41 @@ fn release_on_receiver(node: &mut NodeState, lbi: u8, ebis: Option<&[u8]>, sende
         node.deleting.retain(|l| *l != lbi);
     }
 }
- 
-fn handle_delete_bearer_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
+
+fn handle_delete_bearer_response( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState>)
 {
     // Response에서는 bearer 리스트 안에 삭제된 EBI들이 들어옵니다.
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
         _ => return,
     };
- 
-    let addrs = [&cf.src_addr, &cf.dst_addr];
- 
-    for ip in addrs {
-        if let Some(node) = state.get_mut(ip) {
-            for cf_b in cf_bearers {
-                let target_ebi = cf_b.ebi;
- 
-                // 세션 리스트를 순회하며 해당 EBI를 리스트에서 완전히 제거(retain)합니다.
-                for session_list in node.sessions.values_mut() {
-                    session_list.retain(|b| b.ebi != target_ebi);
-                    node.role = identify_role(session_list );
-                }
+    let ebis: Vec<u8> = cf_bearers.iter().map(|b| b.ebi).collect();
+
+    // Sender: the bearers are gone. Keep what it held to find the leg.
+    let mut removed: Vec<(u8, Vec<EbiDetail>)> = Vec::new();
+    if let Some(node) = state.get_mut(&cf.src_addr) {
+        for (lbi, list) in node.sessions.iter_mut() {
+            let gone: Vec<EbiDetail> = list.iter().filter(|b| ebis.contains(&b.ebi)).cloned().collect();
+            list.retain(|b| !ebis.contains(&b.ebi));
+            if !gone.is_empty() {
+                removed.push((*lbi, gone));
             }
-            // 베어러 삭제 후 노드 역할 재계산 (필요 시)
-            // node.update_role();
+        }
+        node.sessions.retain(|_, list| !list.is_empty());
+    }
+
+    // Receiver: only the leg toward the sender
+    if let Some(node) = state.get_mut(&cf.dst_addr) {
+        for (lbi, gone) in &removed {
+            release_on_receiver(node, *lbi, Some(&ebis), gone);
+        }
+        // Sender held none of them (e.g. MME without tunnel ends): find by EBI
+        if removed.is_empty() {
+            let lbis: Vec<u8> = node.sessions.keys().copied().collect();
+            for lbi in lbis {
+                release_on_receiver(node, lbi, Some(&ebis), &[]);
+            }
         }
     }
 }
@@ -645,45 +694,8 @@ fn handle_delete_session_request( cf: &CallFlow,
 }
 
 
-
-/*
-fn handle_delete_session_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
-{
-    let src = &cf.src_addr;
-    let dst = &cf.dst_addr;
-
-    for ip in &[src, dst] {
-        if let Some(node) = state.get_mut(*ip) {
-            if let Some(lbi) = cf.ebi {
-                node.sessions.remove(&lbi);
-                node.deleting.retain(|l| *l != lbi);
-            } else if !node.deleting.is_empty() {
-                // Remove what the matching Request marked: the oldest pending LBI.
-                // A Request without LBI marked all of them, so take every entry.
-                let lbi = node.deleting.remove(0);
-                node.sessions.remove(&lbi);
-                // The same LBI may have been marked by both legs (S11 and S5)
-                node.deleting.retain(|l| *l != lbi);
-                let still_marked: Vec<u8> = node.sessions.iter()
-                    .filter(|(_, list)| !list.is_empty() && list.iter().all(|d| d.delete_pending))
-                    .map(|(l, _)| *l)
-                    .filter(|l| !node.deleting.contains(l))
-                    .collect();
-                for l in still_marked {
-                    node.sessions.remove(&l);
-                }
-            }
-
-            if node.sessions.is_empty() {
-                node.role = "IDLE".to_string();
-            }
-        }
-    }
-}
- */
-
-
-fn handle_delete_session_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
+fn handle_delete_session_response( cf: &CallFlow,
+    state: &mut HashMap<String, NodeState>)
 {
     // Sender: its PDN connection(s) are gone. Keep what it held to find the leg.
     let mut removed: Vec<(u8, Vec<EbiDetail>)> = Vec::new();
@@ -707,19 +719,13 @@ fn handle_delete_session_response( cf: &CallFlow, state: &mut HashMap<String, No
                 removed.push((lbi, list));
             }
         }
-        if node.sessions.is_empty() {
-            node.role = "IDLE".to_string();
-        }
     }
- 
+
     // Receiver: only the leg toward the sender (the SGW keeps S1-U after the
     // PGW answers, until it answers the MME itself)
     if let Some(node) = state.get_mut(&cf.dst_addr) {
         for (lbi, gone) in &removed {
             release_on_receiver(node, *lbi, None, gone);
-        }
-        if node.sessions.is_empty() {
-            node.role = "IDLE".to_string();
         }
     }
 }
@@ -729,6 +735,8 @@ pub fn
 update_global_state( cf: &CallFlow,
                     state: &mut HashMap<String, NodeState>)
 {
+    learn_roles(cf, state);
+
     match cf.message.as_str() {
         "Create Session Request"    => handle_create_session_req_rsp(cf, state),
         "Create Session Response"   => handle_create_session_req_rsp(cf, state),

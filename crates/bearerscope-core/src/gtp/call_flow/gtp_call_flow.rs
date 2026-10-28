@@ -348,6 +348,14 @@ make_data( flow_packets: Vec<OwnedPacket>)
             }
         };
 
+        // Top-level F-TEIDs (the sender's control-plane F-TEID, and in Create
+        // Session the PGW's) name the node behind each GTP-C address
+        cf.ctrl_fteids = pkt.ies.iter().filter_map(|ie| match &ie.ie_value {
+            IeValue::FTeid(f) if ie.ie_type == GTPV2C_IE_FTEID =>
+                f.ipv4.clone().map(|a| (f.iface_type, a)),
+            _ => None,
+        }).collect();
+
         let ret = find_ie_ebi(&pkt.ies.clone());
         cf.ebi = match ret {
             Ok(v) => Some(v),

@@ -1,7 +1,7 @@
 // Turns the core's call flow output (one entry per message, each with a
 // snapshot of every node's bearer state) into things we can draw.
 
-const ROLE_NAMES = { Access: "MME", RELAY: "SGW", Core: "PGW" };
+const ROLE_NAMES = new Set(["MME", "SGW", "PGW"]);
 
 /** Nodes in order of first appearance, which matches how ladders are drawn. */
 export function flowNodes(flow) {
@@ -14,15 +14,15 @@ export function flowNodes(flow) {
 }
 
 /**
- * Network function name per node, from the last role the core could work out
- * (the role is only known once the node's tunnels are known).
+ * Network function name per node, from the last role the core worked out
+ * (from the node's control-plane F-TEID, or the direction of the procedure).
  */
 export function laneNames(flow, nodes) {
   const names = {};
   nodes.forEach((n) => { names[n] = null; });
   flow.forEach((m) => {
     Object.entries(m.snapshot || {}).forEach(([ip, st]) => {
-      if (ROLE_NAMES[st.role]) names[ip] = ROLE_NAMES[st.role];
+      if (ROLE_NAMES.has(st.role)) names[ip] = st.role;
     });
   });
   return names;
@@ -60,12 +60,9 @@ export function tunnelsAt(snapshot, previous = null) {
           const row = detail.pending_key != null ? `k${detail.pending_key}` : `e${detail.ebi}`;
           const id = `${row}|${iface}`;
           const t = byKey.get(id) || { row, ebi: 0, lbi: Number(lbi), iface, a: null, b: null, state: "up", ends: [] };
-
           if (detail.ebi) t.ebi = detail.ebi;
           t[side] = { node, teid: ep.teid, ip: ep.ip };
-          // const s = bearerState(detail);
           t.ends.push(bearerState(detail));
-          // if (STATE_RANK[s] > STATE_RANK[t.state]) t.state = s;
           byKey.set(id, t);
         });
       });
@@ -73,6 +70,9 @@ export function tunnelsAt(snapshot, previous = null) {
   });
   const tunnels = [...byKey.values()];
 
+  // The core tracks state per bearer on each node, not per tunnel. A tunnel is
+  // being released only once both of its ends are (the Delete request has reached
+  // that leg); otherwise it takes the strongest state of its ends short of that.
   tunnels.forEach((t) => {
     const ends = t.ends;
     delete t.ends;

@@ -24,6 +24,7 @@ pub fn make_mock_callflow()
             ebi: 5,
             fteid_list:None,
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -45,6 +46,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -68,6 +70,7 @@ pub fn make_mock_callflow()
                 }
             ])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -99,6 +102,7 @@ pub fn make_mock_callflow()
                 }
             ])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -121,6 +125,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -142,6 +147,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -198,6 +204,7 @@ pub fn make_mock_callflow()
                 ])
             },
         ]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -272,6 +279,7 @@ pub fn make_mock_callflow()
             },
             ]
         ),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -349,6 +357,7 @@ pub fn make_mock_callflow()
                 }
             ]
         ),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -426,6 +435,7 @@ pub fn make_mock_callflow()
                 }
             ]
         ),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -442,6 +452,7 @@ pub fn make_mock_callflow()
             ebi: 7,
             fteid_list:None,
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -463,6 +474,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -484,6 +496,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -505,6 +518,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
     v.push(CallFlow {
@@ -525,6 +539,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -546,6 +561,7 @@ pub fn make_mock_callflow()
                 ipv6: None,
             }])
         }]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -561,6 +577,7 @@ pub fn make_mock_callflow()
         message: "Delete Bearer Request".into(),
         ebi: Some(10),
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -572,6 +589,7 @@ pub fn make_mock_callflow()
         message: "Delete Bearer Request".into(),
         ebi: Some(10),
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
       
     });
@@ -589,6 +607,7 @@ pub fn make_mock_callflow()
                 fteid_list: None,
             }
         ]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
     v.push(CallFlow {
@@ -604,6 +623,7 @@ pub fn make_mock_callflow()
                 fteid_list: None,
             }
         ]),
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -616,6 +636,7 @@ pub fn make_mock_callflow()
         message: "Delete Session Request".into(),
         ebi: Some(7),
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -627,6 +648,7 @@ pub fn make_mock_callflow()
         message: "Delete Session Request".into(),
         ebi: Some(7),
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -638,6 +660,7 @@ pub fn make_mock_callflow()
         message: "Delete Session Response".into(),
         ebi: None,
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
@@ -649,6 +672,7 @@ pub fn make_mock_callflow()
         message: "Delete Session Response".into(),
         ebi: None,
         bearer: None,
+        ctrl_fteids: Vec::new(),
         snapshot: HashMap::new(),
     });
 
