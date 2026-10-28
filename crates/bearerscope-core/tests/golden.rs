@@ -51,3 +51,74 @@ fn gtp_procedure_callflow_from_first_create_session() {
     let flow = make_call_flow(&fixtures().join(GTP_PROCEDURE), 1).unwrap();
     check_golden("gtp_procedure.callflow.1", &flow);
 }
+
+// ---------------------------------------------------------------- one UE, two PDNs, dedicated bearers
+// tests/fixtures/multi_bearer.pcap comes from tests/fixtures/gen_multi_bearer.py: the
+// pcap_web_parser mock call flow as real GTPv2-C. Attach (LBI 5), network-initiated
+// Create Bearer (EBI 9, 10, 11), a second PDN (LBI 7), Delete Bearer 10, Delete Session LBI 7.
+
+const MULTI_BEARER: &str = "multi_bearer.pcap";
+
+/// EBIs per LBI on each node after the last message
+fn final_bearers(flow: &[bearerscope_core::gtp::call_flow::gtp_context::CallFlow])
+    -> std::collections::BTreeMap<String, std::collections::BTreeMap<u8, Vec<u8>>>
+{
+    flow.last().unwrap().snapshot.iter()
+        .map(|(node, st)| {
+            let pdns = st.sessions.iter()
+                .map(|(lbi, list)| {
+                    let mut ebis: Vec<u8> = list.iter().map(|d| d.ebi).collect();
+                    ebis.sort();
+                    (*lbi, ebis)
+                })
+                .collect();
+            (node.clone(), pdns)
+        })
+        .collect()
+}
+
+#[test]
+fn multi_bearer_follows_every_message_from_any_start() {
+    let path = fixtures().join(MULTI_BEARER);
+    for start in [1, 7, 11, 17, 24] {
+        let flow = make_call_flow(&path, start).unwrap();
+        let ids: Vec<usize> = flow.iter().map(|m| m.id).collect();
+        assert_eq!(ids, (1..=24).collect::<Vec<_>>(), "call flow from packet {start}");
+    }
+}
+
+#[test]
+fn multi_bearer_keeps_the_first_pdn_after_deleting_the_second() {
+    let flow = make_call_flow(&fixtures().join(MULTI_BEARER), 1).unwrap();
+    for (node, pdns) in final_bearers(&flow) {
+        assert_eq!(pdns.into_iter().collect::<Vec<_>>(), vec![(5, vec![5, 9, 11])], "node {node}");
+    }
+    check_golden("multi_bearer.callflow.1", &flow);
+}
+
+#[test]
+fn multi_bearer_keeps_new_bearers_apart_before_their_ebi_is_assigned() {
+    let flow = make_call_flow(&fixtures().join(MULTI_BEARER), 1).unwrap();
+    // Packet 8: SGW -> MME Create Bearer Request, three bearer contexts with EBI 0
+    let step = flow.iter().find(|m| m.id == 8).unwrap();
+    for (node, st) in &step.snapshot {
+        let mut keys: Vec<u32> = st.sessions[&5].iter()
+            .filter(|d| d.ebi == 0)
+            .filter_map(|d| d.pending_key)
+            .collect();
+        keys.sort();
+        assert_eq!(keys, [345, 346, 347], "pending bearers on {node}");
+    }
+}
+
+#[test]
+fn multi_bearer_shows_the_bearer_from_the_first_create_session_request() {
+    let flow = make_call_flow(&fixtures().join(MULTI_BEARER), 1).unwrap();
+    // Packet 1: MME -> SGW Create Session Request with EBI 5 and no F-TEID of the MME yet
+    let step = &flow[0];
+    for node in ["10.10.2.72", "10.10.1.71"] {
+        let ebis: Vec<u8> = step.snapshot[node].sessions[&5].iter().map(|d| d.ebi).collect();
+        assert_eq!(ebis, [5], "EBI 5 on {node} after packet 1");
+        assert!(step.snapshot[node].sessions[&5][0].pending, "EBI 5 on {node} is being set up");
+    }
+}

@@ -55,6 +55,10 @@ pub struct NodeState {
     pub ip: String,
     pub role: String,
     pub sessions: HashMap<u8, Vec<EbiDetail>>,
+    /// PDN connections (by LBI) a Delete Session Request is tearing down on this
+    /// node, oldest first. The Response carries no LBI, so it removes these.
+    #[serde(skip)]
+    pub deleting: Vec<u8>,
 }
 
 impl NodeState {
@@ -63,6 +67,7 @@ impl NodeState {
             ip: ip.to_string(),
             role: String::new(),
             sessions: HashMap::new(),
+            deleting: Vec::new(),
         }
     }
 }
@@ -76,6 +81,20 @@ pub struct EbiDetail {
     pub is_local: bool,
     pub delete_pending: bool,
     pub tunnels: TunnelInfo,
+    /// For a bearer created before its EBI is known (Create Bearer Request
+    /// carries EBI 0): the PGW S5/S8-U TEID, which every node sees in that
+    /// bearer's context, so the same new bearer can be matched across nodes.
+    /// Kept after the MME assigns the EBI.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub pending_key: Option<u32>,
+}
+
+/// PGW S5/S8-U TEID of a bearer context still waiting for its EBI
+fn pending_key_of(bearer: &Bearer) -> Option<u32> {
+    if bearer.ebi != 0 {
+        return None;
+    }
+    bearer.fteid_list.as_ref()?.iter().find(|f| f.iface_type == 5).map(|f| f.teid)
 }
 
 impl EbiDetail {
@@ -83,16 +102,31 @@ impl EbiDetail {
     {
         let mut detail = EbiDetail {
             ebi: bearers.ebi,
+            pending_key: pending_key_of(bearers),
             ..Default::default()
         };
 
         return Some(detail);
     }
 
+    /// A bearer the node holds before any of its GTP-U endpoints is known
+    /// (e.g. the MME's EBI in Create Session Request): no tunnels yet
+    pub fn create_context(bearers: &Bearer, msg: &str) -> Self
+    {
+        let mut detail = EbiDetail {
+            ebi: bearers.ebi,
+            pending_key: pending_key_of(bearers),
+            ..Default::default()
+        };
+        set_status(&mut detail, msg);
+        detail
+    }
+
     pub fn create_bearer(bearers: &Bearer, msg: &str, ip: &str) -> Option<Self>
     {
         let mut detail = EbiDetail {
             ebi: bearers.ebi,
+            pending_key: pending_key_of(bearers),
             ..Default::default()
         };
 
@@ -282,9 +316,11 @@ fn handle_create_session_req_rsp( cf: &CallFlow,
                 let exists = session_list.iter().any(|e|e.ebi==b_ebi);
 
                 if !exists {
-                    if let Some(ebi) = EbiDetail::create_bearer(&cf_b, &cf.message, ip) {
-                        session_list.push(ebi);
-                    }
+                    // Both peers hold the bearer from this message on, even when
+                    // none of its F-TEIDs is theirs yet (MME before Modify Bearer)
+                    let ebi = EbiDetail::create_bearer(&cf_b, &cf.message, ip)
+                        .unwrap_or_else(|| EbiDetail::create_context(&cf_b, &cf.message));
+                    session_list.push(ebi);
                 }
                 else {
                     if let Some(target_sess) = session_list.iter_mut().find(|e| e.ebi == b_ebi) {
@@ -532,62 +568,71 @@ fn handle_delete_session_request( cf: &CallFlow,
 {
     let src = &cf.src_addr;
     let dst = &cf.dst_addr;
- 
+
     for ip in &[src, dst] {
         if let Some(node) = state.get_mut(*ip) {
-            // 해당 노드가 관리하는 모든 세션(LBI)을 순회
-            for session_list in node.sessions.values_mut() {
-                // 세션 리스트 안의 모든 베어러(EbiDetail)를 삭제 대기 상태로 전환
-                for detail in session_list.iter_mut() {
-                    // 이전에 만든 set_status를 활용합니다.
-                    // msg에 "Delete"가 포함되어 있으므로 delete_pending = true가 됩니다.
-                    set_status(detail, &cf.message);
+            match cf.ebi {
+                // Linked EPS Bearer ID: only that PDN connection goes away
+                Some(lbi) => {
+                    if let Some(session_list) = node.sessions.get_mut(&lbi) {
+                        for detail in session_list.iter_mut() {
+                            set_status(detail, &cf.message);
+                        }
+                    }
+                    node.deleting.push(lbi);
                 }
-                    node.role = identify_role(session_list );
+                // No LBI (e.g. detach): every PDN connection of the UE
+                None => {
+                    for session_list in node.sessions.values_mut() {
+                        for detail in session_list.iter_mut() {
+                            set_status(detail, &cf.message);
+                        }
+                    }
+                    let all: Vec<u8> = node.sessions.keys().copied().collect();
+                    node.deleting.extend(all);
+                }
             }
-            
-            // 삭제 시작 시점에 노드의 역할이나 상태를 갱신할 수 있습니다.
-            // node.update_role(); 
         }
     }
- 
 }
- 
- 
+
+
 fn handle_delete_session_response( cf: &CallFlow,
     state: &mut HashMap<String, NodeState>)
 {
-    // Delete Session Response 역시 bearer 리스트가 비어있는 경우가 많습니다.
     let src = &cf.src_addr;
     let dst = &cf.dst_addr;
- 
+
     for ip in &[src, dst] {
         if let Some(node) = state.get_mut(*ip) {
-            // 1. 해당 노드의 모든 세션을 완전히 삭제합니다.
-            // 만약 특정 세션만 삭제해야 한다면 cf.ebi(LBI)를 사용하여 
-            // node.sessions.remove(&lbi)를 호출하면 됩니다.
-            
             if let Some(lbi) = cf.ebi {
-                // 특정 LBI가 명시된 경우 해당 세션만 삭제
                 node.sessions.remove(&lbi);
-            } else {
-                // LBI가 명시되지 않은 경우, 관례적으로 해당 노드의 모든 세션 정리
-                node.sessions.clear();
+                node.deleting.retain(|l| *l != lbi);
+            } else if !node.deleting.is_empty() {
+                // Remove what the matching Request marked: the oldest pending LBI.
+                // A Request without LBI marked all of them, so take every entry.
+                let lbi = node.deleting.remove(0);
+                node.sessions.remove(&lbi);
+                // The same LBI may have been marked by both legs (S11 and S5)
+                node.deleting.retain(|l| *l != lbi);
+                let still_marked: Vec<u8> = node.sessions.iter()
+                    .filter(|(_, list)| !list.is_empty() && list.iter().all(|d| d.delete_pending))
+                    .map(|(l, _)| *l)
+                    .filter(|l| !node.deleting.contains(l))
+                    .collect();
+                for l in still_marked {
+                    node.sessions.remove(&l);
+                }
             }
- 
-            // 2. 세션이 사라졌으므로 노드의 역할(Role)을 초기화하거나 재계산합니다.
-            // 베어러가 하나도 없다면 보통 "Unknown"이나 기본 상태로 돌아갑니다.
+
             if node.sessions.is_empty() {
                 node.role = "IDLE".to_string();
-            } else {
-                // 남아있는 세션이 있다면 역할 재계산
-                // node.update_role();
             }
         }
     }
 }
- 
- 
+
+
 pub fn
 update_global_state( cf: &CallFlow,
                     state: &mut HashMap<String, NodeState>)

@@ -1,0 +1,5551 @@
+[
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": null
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 1,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 123,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.3.73",
+    "ebi": null,
+    "id": 2,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 321,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 3,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 132,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 321,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 4,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Unknown",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 213,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 5,
+    "message": "Modify Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 5,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 132,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 6,
+    "message": "Modify Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 345,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 346,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 347,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": 5,
+    "id": 7,
+    "message": "Create Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 145,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 345,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 146,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 346,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 0,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 147,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 347,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": 5,
+    "id": 8,
+    "message": "Create Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 9,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 245,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 145,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 10,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 246,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 146,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 11,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 247,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 147,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 9,
+    "message": "Create Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 0,
+              "is_local": false,
+              "pending": true,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 9,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 155,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 345,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 10,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 156,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 346,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      },
+      {
+        "ebi": 11,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 157,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 347,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.3.73",
+    "ebi": null,
+    "id": 10,
+    "message": "Create Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": null
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 11,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": [
+          {
+            "iface_type": 4,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1123,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.3.73",
+    "ebi": null,
+    "id": 12,
+    "message": "Create Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": [
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 3321,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 13,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1132,
+            "v4": true,
+            "v6": false
+          },
+          {
+            "iface_type": 5,
+            "ipv4": "10.10.3.73",
+            "ipv6": null,
+            "teid": 3321,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 14,
+    "message": "Create Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": [
+          {
+            "iface_type": 0,
+            "ipv4": "10.10.2.72",
+            "ipv6": null,
+            "teid": 2213,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 15,
+    "message": "Modify Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 7,
+        "fteid_list": [
+          {
+            "iface_type": 1,
+            "ipv4": "10.10.1.71",
+            "ipv6": null,
+            "teid": 1132,
+            "v4": true,
+            "v6": false
+          }
+        ]
+      }
+    ],
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 16,
+    "message": "Modify Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": 10,
+    "id": 17,
+    "message": "Delete Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.2.72",
+    "ebi": 10,
+    "id": 18,
+    "message": "Delete Bearer Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 146
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 156
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 246
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 10,
+        "fteid_list": null
+      }
+    ],
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 19,
+    "message": "Delete Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 10,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 346,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 346
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": [
+      {
+        "ebi": 10,
+        "fteid_list": null
+      }
+    ],
+    "dst_addr": "10.10.3.73",
+    "ebi": null,
+    "id": 20,
+    "message": "Delete Bearer Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": 7,
+    "id": 21,
+    "message": "Delete Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.3.73",
+    "ebi": 7,
+    "id": 22,
+    "message": "Delete Session Request",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 1123
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 3321
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.1.71",
+    "ebi": null,
+    "id": 23,
+    "message": "Delete Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ],
+          "7": [
+            {
+              "active": true,
+              "delete_pending": true,
+              "ebi": 7,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 2213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.3.73",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 24,
+    "message": "Delete Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "RELAY",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 132
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 123
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 145
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 155
+                }
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 147
+                },
+                "s5s8_pgw": null,
+                "s5s8_sgw": {
+                  "ip": "10.10.1.71",
+                  "teid": 157
+                }
+              }
+            }
+          ]
+        }
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "Access",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 213
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 245
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": {
+                  "ip": "10.10.2.72",
+                  "teid": 247
+                },
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "Core",
+        "sessions": {
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 321
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 9,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 345,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 345
+                },
+                "s5s8_sgw": null
+              }
+            },
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 11,
+              "is_local": false,
+              "pending": false,
+              "pending_key": 347,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": {
+                  "ip": "10.10.3.73",
+                  "teid": 347
+                },
+                "s5s8_sgw": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "src_addr": "10.10.1.71",
+    "timestamp": ""
+  }
+]

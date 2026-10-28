@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CallFlowGraph from "./CallFlowGraph";
 
-export default function CallFlowView({ flow, startPacket, loading, onBack }) {
+export default function CallFlowView({ flow, startPacket, loading, onBack, onOpenPacket }) {
   // Always start before the first message so the bearers build up step by step
   const [step, setStep] = useState(0);
   const total = flow?.length ?? 0;
@@ -46,7 +46,9 @@ export default function CallFlowView({ flow, startPacket, loading, onBack }) {
 
       <div className="flow-scroll">
         {!loading && total === 0 && <div className="flow-empty">This session has no GTPv2-C messages to show.</div>}
-        {!loading && total > 0 && <CallFlowGraph flow={flow} step={step} onStep={setStep} />}
+        {!loading && total > 0 && (
+          <CallFlowGraph flow={flow} step={step} onStep={setStep} onOpenPacket={onOpenPacket} />
+        ) }
       </div>
     </section>
   );

@@ -15,14 +15,42 @@
         "ip": "10.10.1.71",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       },
       "10.10.2.72": {
         "ip": "10.10.2.72",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       }
     },
@@ -78,14 +106,42 @@
         "ip": "10.10.2.72",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       },
       "10.10.3.73": {
         "ip": "10.10.3.73",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       }
     },
@@ -141,7 +197,21 @@
         "ip": "10.10.2.72",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": false,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": true,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       },
       "10.10.3.73": {
@@ -232,7 +302,21 @@
         "ip": "10.10.2.72",
         "role": "Unknown",
         "sessions": {
-          "5": []
+          "5": [
+            {
+              "active": true,
+              "delete_pending": false,
+              "ebi": 5,
+              "is_local": false,
+              "pending": false,
+              "tunnels": {
+                "s1u_enb": null,
+                "s1u_sgw": null,
+                "s5s8_pgw": null,
+                "s5s8_sgw": null
+              }
+            }
+          ]
         }
       },
       "10.10.3.73": {
@@ -317,7 +401,7 @@
         "sessions": {
           "5": [
             {
-              "active": false,
+              "active": true,
               "delete_pending": false,
               "ebi": 5,
               "is_local": false,
@@ -730,6 +814,32 @@
       }
     },
     "src_addr": "10.10.2.72",
+    "timestamp": ""
+  },
+  {
+    "bearer": null,
+    "dst_addr": "10.10.2.72",
+    "ebi": null,
+    "id": 102,
+    "message": "Delete Session Response",
+    "snapshot": {
+      "10.10.1.71": {
+        "ip": "10.10.1.71",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.2.72": {
+        "ip": "10.10.2.72",
+        "role": "IDLE",
+        "sessions": {}
+      },
+      "10.10.3.73": {
+        "ip": "10.10.3.73",
+        "role": "IDLE",
+        "sessions": {}
+      }
+    },
+    "src_addr": "10.10.1.71",
     "timestamp": ""
   }
 ]

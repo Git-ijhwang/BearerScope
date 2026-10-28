@@ -50,10 +50,10 @@ pub struct BearerQoSValue {
     pub pvi: bool,
     pub qci: u8,
 
-    pub mbr_ul: u32,
-    pub mbr_dl: u32,
-    pub gbr_ul: u32,
-    pub gbr_dl: u32,
+    pub mbr_ul: u64,
+    pub mbr_dl: u64,
+    pub gbr_ul: u64,
+    pub gbr_dl: u64,
 }
 
 
@@ -727,56 +727,29 @@ pub fn decode_fteid<T>(input: &[u8])
 pub fn decode_bearerqos<T>(input: &[u8])
     -> Result<IeValue<T>, String>
 {
-    if input.is_empty() {
-        return Err("input is empty".into());
+    // TS 29.274 8.15: flags(1) QCI(1) then MBR UL, MBR DL, GBR UL, GBR DL as 5-octet kbps values
+    if input.len() < 22 {
+        return Err(format!("Bearer QoS IE: length {} is shorter than 22", input.len()));
     }
-    let mut pos = 0;
 
-    let pci:bool = input[0] & 0x40 != 0;
-    let pl  = (input[0] & 0x3C) >> 2;
-    let pvi:bool  = input[0] & 0x01 != 0;
-    pos += 1;
+    let pci: bool = input[0] & 0x40 != 0;
+    let pl = (input[0] & 0x3C) >> 2;
+    let pvi: bool = input[0] & 0x01 != 0;
+    let qci = input[1];
 
-    let qci = input[pos];
-    pos += 1;
+    let kbps = |o: usize| input[o..o + 5].iter().fold(0u64, |acc, b| (acc << 8) | *b as u64);
 
-    // let input[pos]
-    let mbr_ul = u32::from_be_bytes([
-                input[pos], input[pos+1],
-                input[pos+2], input[pos+3]
-            ]);
-    pos += 4;
-
-    let mbr_dl = u32::from_be_bytes([
-                input[pos], input[pos+1],
-                input[pos+2], input[pos+3]
-            ]);
-    pos += 4;
-
-    let gbr_ul = u32::from_be_bytes([
-                input[pos], input[pos+1],
-                input[pos+2], input[pos+3]
-            ]);
-    pos += 4;
-
-    let gbr_dl = u32::from_be_bytes([
-                input[pos], input[pos+1],
-                input[pos+2], input[pos+3]
-            ]);
-    pos += 4;
-
-    let qos = BearerQoSValue{
+    let qos = BearerQoSValue {
         pci,
         pl,
         pvi,
         qci,
-        mbr_ul,
-        mbr_dl,
-        gbr_ul,
-        gbr_dl,
+        mbr_ul: kbps(2),
+        mbr_dl: kbps(7),
+        gbr_ul: kbps(12),
+        gbr_dl: kbps(17),
     };
     Ok(IeValue::BearerQoS(qos))
-
 }
 
 

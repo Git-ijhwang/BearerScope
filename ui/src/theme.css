@@ -521,7 +521,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--surface);
   border-bottom: 1px solid var(--rule-soft);
 }
 
@@ -665,3 +665,16 @@ body {
 /* A packet opened in its own window */
 .packet-window { height: 100%; display: flex; flex-direction: column; }
 .packet-window .inspector { flex: 1; }
+
+
+/* Call flow: bearers grouped by PDN connection (LBI) */
+.pdn-band { fill: var(--paper); opacity: 0.6; }
+.pdn-box { fill: var(--surface); stroke: var(--ink-3); stroke-width: 1.2; }
+.pdn-caption { font: 600 10.5px var(--font-ui); fill: var(--ink-3); letter-spacing: 0.06em; }
+.pdn-lbi { font: 600 14px var(--font-ui); fill: var(--ink); }
+.pdn-divider { stroke: var(--rule); }
+.ebi-name { font: 600 12.5px var(--font-ui); fill: var(--ink); }
+.ebi-kind { font: 11px var(--font-ui); fill: var(--ink-3); }
+.tunnel-box { fill: var(--surface); stroke-width: 1.3; }
+.tunnel-box.is-pending { fill: var(--surface); }
+.tunnel-teid.is-pending { fill: var(--ink-3); }

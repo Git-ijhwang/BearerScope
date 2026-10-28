@@ -101,6 +101,12 @@ export default function App() {
       .catch((e) => setError(`Couldn't open packet ${pkt.id} in a new window: ${e}`));
   }, [pcapPath]);
 
+  // Messages in the call flow open the same packet window as a double-click
+  const openPacketById = useCallback((id) => {
+    const pkt = summary?.packets.find((p) => p.id === id);
+    if (pkt) popOut(pkt);
+  }, [summary, popOut]);
+
   // ---------------------------------------------------------------- call flow
 
   const openFlow = useCallback(async (id) => {
@@ -189,6 +195,7 @@ export default function App() {
             startPacket={flow.start}
             loading={flow.loading}
             onBack={closeFlow}
+            onOpenPacket={openPacketById}
           />
         ) : (
           <div className={`packets-view ${inspectorOpen && selected ? "has-inspector" : ""}`}>
@@ -211,7 +218,10 @@ export default function App() {
                 error={detail?.error}
                 loading={!detail}
                 onClose={() => setInspectorOpen(false)}
-                onPopOut={() => popOut(selected)}
+                onPopOut={() => {
+                  popOut(selected);
+                  setInspectorOpen(false);
+                }}
               />
             )}
           </div>

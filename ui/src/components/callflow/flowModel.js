@@ -55,8 +55,12 @@ export function tunnelsAt(snapshot, previous = null) {
         ENDPOINTS.forEach(({ iface, side, key }) => {
           const ep = detail.tunnels?.[key];
           if (!ep) return;
-          const id = `${detail.ebi}|${iface}`;
-          const t = byKey.get(id) || { ebi: detail.ebi, lbi: Number(lbi), iface, a: null, b: null, state: "up" };
+          // A bearer created with EBI 0 (Create Bearer Request) is matched across
+          // nodes by its pending key until, and after, the MME assigns the EBI
+          const row = detail.pending_key != null ? `k${detail.pending_key}` : `e${detail.ebi}`;
+          const id = `${row}|${iface}`;
+          const t = byKey.get(id) || { row, ebi: 0, lbi: Number(lbi), iface, a: null, b: null, state: "up" };
+          if (detail.ebi) t.ebi = detail.ebi;
           t[side] = { node, teid: ep.teid, ip: ep.ip };
           const s = bearerState(detail);
           if (STATE_RANK[s] > STATE_RANK[t.state]) t.state = s;
@@ -71,14 +75,36 @@ export function tunnelsAt(snapshot, previous = null) {
   // ends were already in place before this message, with the same TEIDs, is
   // not the one being changed, so show it as up.
   if (previous) {
-    const before = new Map(tunnelsAt(previous).map((t) => [`${t.ebi}|${t.iface}`, t]));
+    const before = new Map(tunnelsAt(previous).map((t) => [`${t.row}|${t.iface}`, t]));
     tunnels.forEach((t) => {
-      const p = before.get(`${t.ebi}|${t.iface}`);
+      const p = before.get(`${t.row}|${t.iface}`);
       const same = (e1, e2) => e1 && e2 && e1.teid === e2.teid && e1.node === e2.node;
       if (t.state === "pending" && p && same(p.a, t.a) && same(p.b, t.b)) t.state = "up";
     });
   }
-  return tunnels.sort((x, y) => x.ebi - y.ebi || x.iface.localeCompare(y.iface));
+  return tunnels.sort((x, y) => x.lbi - y.lbi || x.row.localeCompare(y.row) || x.iface.localeCompare(y.iface));
+}
+
+/**
+ * Every bearer the nodes hold after a message, tunnels or not: one row per
+ * bearer, with the nodes that have it and the state on each.
+ * A bearer exists on a node before any of its GTP-U endpoints is known
+ * (the MME's EBI in Create Session Request, a PGW receiving a request).
+ */
+export function bearersAt(snapshot) {
+  const rows = new Map();
+  Object.entries(snapshot || {}).forEach(([node, st]) => {
+    Object.entries(st.sessions || {}).forEach(([lbi, list]) => {
+      (list || []).forEach((detail) => {
+        const row = detail.pending_key != null ? `k${detail.pending_key}` : `e${detail.ebi}`;
+        const r = rows.get(row) || { row, ebi: 0, lbi: Number(lbi), holders: [] };
+        if (detail.ebi) r.ebi = detail.ebi;
+        r.holders.push({ node, state: bearerState(detail) });
+        rows.set(row, r);
+      });
+    });
+  });
+  return [...rows.values()];
 }
 
 export const hex = (n) => `0x${Number(n).toString(16).toUpperCase().padStart(8, "0")}`;
