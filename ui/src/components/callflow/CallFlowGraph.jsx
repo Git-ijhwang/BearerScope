@@ -208,8 +208,9 @@ export default function CallFlowGraph({ flow, step, onStep, onOpenPacket }) {
                     holders.forEach((h) => {
                       const i = nodes.indexOf(h.node);
                       if (i < 0) return;
-                      if (i < nodes.length - 1 && !drawn.has(`${h.node}|R`)) pending.push({ ...h, side: "R" });
-                      if (i > 0 && !drawn.has(`${h.node}|L`)) pending.push({ ...h, side: "L" });
+                      if (drawn.has(`${h.node}|R`) || drawn.has(`${h.node}|L`)) return;
+                      if (i < nodes.length - 1) pending.push({ ...h, side: "R" });
+                      if (i > 0) pending.push({ ...h, side: "L" });
                     });
                     const pendingAt = new Set(pending.map((p) => `${p.node}|${p.side}`));
                     // For a half tunnel, the lane its missing end belongs to

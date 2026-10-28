@@ -288,8 +288,7 @@ fn identify_role(ebi_list: &mut Vec<EbiDetail>) -> String
 }
 
 
-fn handle_create_session_req_rsp( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState> )
+fn handle_create_session_req_rsp( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
@@ -319,8 +318,17 @@ fn handle_create_session_req_rsp( cf: &CallFlow,
                     // Both peers hold the bearer from this message on, even when
                     // none of its F-TEIDs is theirs yet (MME before Modify Bearer)
                     let ebi = EbiDetail::create_bearer(&cf_b, &cf.message, ip)
-                        .unwrap_or_else(|| EbiDetail::create_context(&cf_b, &cf.message));
-                    session_list.push(ebi);
+                        .or_else(|| (*ip == src)
+                            .then(|| EbiDetail::create_context(&cf_b, &cf.message)));
+                    match ebi {
+                        Some(ebi) => session_list.push(ebi),
+                        None => {
+                            if session_list.is_empty() {
+                                node.sessions.remove(&b_ebi);
+                            }
+                            continue;
+                        }
+                    }
                 }
                 else {
                     if let Some(target_sess) = session_list.iter_mut().find(|e| e.ebi == b_ebi) {
@@ -339,9 +347,7 @@ fn handle_create_session_req_rsp( cf: &CallFlow,
 }
 
 
-fn handle_create_bearer_request( cf: &CallFlow,
-                                state: &mut HashMap<String,
-                                NodeState> )
+fn handle_create_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
@@ -435,8 +441,7 @@ fn handle_create_bearer_response( cf: &CallFlow,
 }
 
 
-fn handle_modify_bearer_request( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState> )
+fn handle_modify_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
@@ -482,8 +487,7 @@ fn handle_modify_bearer_request( cf: &CallFlow,
 }
  
  
-fn handle_modify_bearer_response( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState> )
+fn handle_modify_bearer_response( cf: &CallFlow, state: &mut HashMap<String, NodeState> )
 {
     let cf_bearers = match &cf.bearer {
         Some(b) if !b.is_empty() => b,
@@ -509,8 +513,7 @@ fn handle_modify_bearer_response( cf: &CallFlow,
 }
  
  
-fn handle_delete_bearer_request( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState>)
+fn handle_delete_bearer_request( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
 {
     // Request의 ebi 필드에서 삭제할 대상을 가져옵니다.
     let target_ebi = match cf.ebi {
@@ -529,14 +532,59 @@ fn handle_delete_bearer_request( cf: &CallFlow,
                     set_status(sess, &cf.message);
                     break;
                 }
-                    node.role = identify_role(session_list );
+                node.role = identify_role(session_list );
             }
         }
     }
 }
  
-fn handle_delete_bearer_response( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState>)
+
+impl TunnelInfo {
+    fn has_s5(&self) -> bool {
+        self.s5s8_sgw.is_some() || self.s5s8_pgw.is_some()
+    }
+ 
+    fn is_empty(&self) -> bool {
+        self.s1u_enb.is_none() && self.s1u_sgw.is_none() && !self.has_s5()
+    }
+}
+ 
+/// A Delete response finishes the release on one leg only. Its sender is done
+/// with the bearer; the receiver drops just the tunnel end facing the sender and
+/// keeps the other one (the SGW keeps S1-U after the PGW answers) until it sends
+/// its own response. The leg is S5/S8 when both peers hold an S5/S8 end, S1-U
+/// otherwise (MME <-> SGW). Returns false once the receiver holds nothing.
+fn release_leg(receiver: &mut EbiDetail, sender: Option<&EbiDetail>) -> bool
+{
+    let s5_leg = receiver.tunnels.has_s5() && sender.map_or(false, |s| s.tunnels.has_s5());
+    if s5_leg {
+        receiver.tunnels.s5s8_sgw = None;
+        receiver.tunnels.s5s8_pgw = None;
+    } else {
+        receiver.tunnels.s1u_enb = None;
+        receiver.tunnels.s1u_sgw = None;
+    }
+    !receiver.tunnels.is_empty()
+}
+ 
+/// The receiver's side of a Delete response for the given (LBI, EBIs);
+/// `sender` holds the sender's bearers as they were before it dropped them
+fn release_on_receiver(node: &mut NodeState, lbi: u8, ebis: Option<&[u8]>, sender: &[EbiDetail])
+{
+    let Some(list) = node.sessions.get_mut(&lbi) else { return };
+    list.retain_mut(|d| {
+        if ebis.map_or(false, |e| !e.contains(&d.ebi)) {
+            return true;
+        }
+        release_leg(d, sender.iter().find(|s| s.ebi == d.ebi))
+    });
+    if list.is_empty() {
+        node.sessions.remove(&lbi);
+        node.deleting.retain(|l| *l != lbi);
+    }
+}
+ 
+fn handle_delete_bearer_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
 {
     // Response에서는 bearer 리스트 안에 삭제된 EBI들이 들어옵니다.
     let cf_bearers = match &cf.bearer {
@@ -597,8 +645,9 @@ fn handle_delete_session_request( cf: &CallFlow,
 }
 
 
-fn handle_delete_session_response( cf: &CallFlow,
-    state: &mut HashMap<String, NodeState>)
+
+/*
+fn handle_delete_session_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
 {
     let src = &cf.src_addr;
     let dst = &cf.dst_addr;
@@ -628,6 +677,49 @@ fn handle_delete_session_response( cf: &CallFlow,
             if node.sessions.is_empty() {
                 node.role = "IDLE".to_string();
             }
+        }
+    }
+}
+ */
+
+
+fn handle_delete_session_response( cf: &CallFlow, state: &mut HashMap<String, NodeState>)
+{
+    // Sender: its PDN connection(s) are gone. Keep what it held to find the leg.
+    let mut removed: Vec<(u8, Vec<EbiDetail>)> = Vec::new();
+    if let Some(node) = state.get_mut(&cf.src_addr) {
+        let mut lbis: Vec<u8> = Vec::new();
+        if let Some(lbi) = cf.ebi {
+            lbis.push(lbi);
+        } else if !node.deleting.is_empty() {
+            // Remove what the matching Request marked: the oldest pending LBI.
+            // A Request without LBI marked all of them, so take every entry.
+            lbis.push(node.deleting[0]);
+            lbis.extend(node.sessions.iter()
+                .filter(|(_, list)| !list.is_empty() && list.iter().all(|d| d.delete_pending))
+                .map(|(l, _)| *l)
+                .filter(|l| !node.deleting.contains(l)));
+        }
+        for lbi in lbis {
+            // The same LBI may have been marked by both legs (S11 and S5)
+            node.deleting.retain(|l| *l != lbi);
+            if let Some(list) = node.sessions.remove(&lbi) {
+                removed.push((lbi, list));
+            }
+        }
+        if node.sessions.is_empty() {
+            node.role = "IDLE".to_string();
+        }
+    }
+ 
+    // Receiver: only the leg toward the sender (the SGW keeps S1-U after the
+    // PGW answers, until it answers the MME itself)
+    if let Some(node) = state.get_mut(&cf.dst_addr) {
+        for (lbi, gone) in &removed {
+            release_on_receiver(node, *lbi, None, gone);
+        }
+        if node.sessions.is_empty() {
+            node.role = "IDLE".to_string();
         }
     }
 }

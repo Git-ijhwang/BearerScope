@@ -114,11 +114,22 @@ fn multi_bearer_keeps_new_bearers_apart_before_their_ebi_is_assigned() {
 #[test]
 fn multi_bearer_shows_the_bearer_from_the_first_create_session_request() {
     let flow = make_call_flow(&fixtures().join(MULTI_BEARER), 1).unwrap();
+
     // Packet 1: MME -> SGW Create Session Request with EBI 5 and no F-TEID of the MME yet
     let step = &flow[0];
-    for node in ["10.10.2.72", "10.10.1.71"] {
-        let ebis: Vec<u8> = step.snapshot[node].sessions[&5].iter().map(|d| d.ebi).collect();
-        assert_eq!(ebis, [5], "EBI 5 on {node} after packet 1");
-        assert!(step.snapshot[node].sessions[&5][0].pending, "EBI 5 on {node} is being set up");
-    }
+    let mme = &step.snapshot["10.10.2.72"];
+    let ebis: Vec<u8> = mme.sessions[&5].iter().map(|d| d.ebi).collect();
+
+    assert_eq!(ebis, [5], "EBI 5 on the MME after packet 1");
+    assert!(mme.sessions[&5][0].pending, "EBI 5 on the MME is being set up");
+
+    // The SGW has only received the request: it holds nothing until it answers or forwards
+    assert!(step.snapshot["10.10.1.71"].sessions.is_empty(), "SGW holds no bearer after packet 1");
+
+    // Packet 2: SGW -> PGW Create Session Request carries the SGW's S5/S8-U F-TEID
+    let step = &flow[1];
+
+    assert_eq!(step.snapshot["10.10.1.71"].sessions[&5].len(), 1, "SGW holds EBI 5 after packet 2");
+    assert!(step.snapshot["10.10.3.73"].sessions.is_empty(), "PGW holds no bearer after packet 2");
+}
 }

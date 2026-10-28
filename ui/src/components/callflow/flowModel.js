@@ -59,17 +59,27 @@ export function tunnelsAt(snapshot, previous = null) {
           // nodes by its pending key until, and after, the MME assigns the EBI
           const row = detail.pending_key != null ? `k${detail.pending_key}` : `e${detail.ebi}`;
           const id = `${row}|${iface}`;
-          const t = byKey.get(id) || { row, ebi: 0, lbi: Number(lbi), iface, a: null, b: null, state: "up" };
+          const t = byKey.get(id) || { row, ebi: 0, lbi: Number(lbi), iface, a: null, b: null, state: "up", ends: [] };
+
           if (detail.ebi) t.ebi = detail.ebi;
           t[side] = { node, teid: ep.teid, ip: ep.ip };
-          const s = bearerState(detail);
-          if (STATE_RANK[s] > STATE_RANK[t.state]) t.state = s;
+          // const s = bearerState(detail);
+          t.ends.push(bearerState(detail));
+          // if (STATE_RANK[s] > STATE_RANK[t.state]) t.state = s;
           byKey.set(id, t);
         });
       });
     });
   });
   const tunnels = [...byKey.values()];
+
+  tunnels.forEach((t) => {
+    const ends = t.ends;
+    delete t.ends;
+    if (ends.every((s) => s === "releasing")) { t.state = "releasing"; return; }
+    t.state = ends.filter((s) => s !== "releasing")
+      .reduce((m, s) => (STATE_RANK[s] > STATE_RANK[m] ? s : m), "up");
+  });
 
   // The core tracks "pending" per bearer, not per tunnel. A tunnel whose two
   // ends were already in place before this message, with the same TEIDs, is
