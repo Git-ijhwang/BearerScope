@@ -1,8 +1,23 @@
 import React, { useState, useId } from "react";
-import "./ip.css";
-import HexDump from '../hex-dump/HexDump';
-import BitGridHeader from './common/BitGridHeader'; // 방금 만든 파일 임포트
+import "./UdpHeader.css";
+import HexDump from "./common/HexDump";
+import BitGridHeader from "./common/BitGridHeader";
 
+// RFC 9293 3.1: control bits in octet 13, most significant first
+const FLAGS = [
+  { bit: 0x80, short: "C", name: "CWR" },
+  { bit: 0x40, short: "E", name: "ECE" },
+  { bit: 0x20, short: "U", name: "URG" },
+  { bit: 0x10, short: "A", name: "ACK" },
+  { bit: 0x08, short: "P", name: "PSH" },
+  { bit: 0x04, short: "R", name: "RST" },
+  { bit: 0x02, short: "S", name: "SYN" },
+  { bit: 0x01, short: "F", name: "FIN" },
+];
+
+const hex4 = (n) => (n != null ? `0x${n.toString(16).toUpperCase().padStart(4, "0")}` : "-");
+const flagNames = (flags) => FLAGS.filter((f) => flags & f.bit).map((f) => f.name).join(" ") || "none";
+const port = (num, name) => (name ? `${name} [${num}]` : `${num}`);
 
 export default function TcpHeader({ tcp }) {
   const [viewMode, setViewMode] = useState("decoded");
@@ -10,223 +25,115 @@ export default function TcpHeader({ tcp }) {
 
   if (!tcp) return null;
 
+  const optionsLen = tcp.options?.length ?? 0;
+  const payloadLen = tcp.payload?.length ?? 0;
+  const headerLen = tcp.header_sz || 20;
+
   return (
-      <div className="card mb-3">
-
-        <div className="card-header tcp-header d-flex justify-content-between align-items-center">
-          <strong>Layer 4 (Transport)</strong>
-          <div className="form-check form-switch d-inline-flex align-items-center ms-3" style={{ fontSize: "14px" }} >
-
-            <label className="form-check-label me-5" htmlFor={switchId}>
-              {viewMode === "raw" ? "Raw" : "Decoded"}
-            </label>
-
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              id={switchId}
-              checked={viewMode === "raw"}
-              onChange={() =>
-                setViewMode(viewMode === "raw" ? "decoded" : "raw")
-              }
-            />
-          </div>
+    <div className="card mb-3">
+      <div className="card-header udp-card-header d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center">
+          <span className="protocol-badge">L4</span>
+          <strong className="protocol-title">TCP Header</strong>
         </div>
+        <div className="form-check form-switch d-inline-flex align-items-center ms-3" style={{ fontSize: "14px" }}>
+          <label className="form-check-label me-5" htmlFor={switchId}>
+            {viewMode === "raw" ? "Raw" : "Decoded"}
+          </label>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id={switchId}
+            checked={viewMode === "raw"}
+            onChange={() => setViewMode(viewMode === "raw" ? "decoded" : "raw")}
+          />
+        </div>
+      </div>
 
-        <div className="card-body tcp-card-body">
-
-          {viewMode === "raw" ? (
-
-            <div style={{ display: "flex", gap: "15px" }}>
-              <div style={{ flex: "0 0 600px" }}>
-
-                <table className="table table-bordered table-sm" style={{ fontSize: "14px" }}>
-                  <tbody>
-                    <tr>
-                      <th colSpan="2" style={{textAlign: "Center"}}>
-                        <b>TCP Header</b>
-                      </th>
-                    </tr>
-
-                    <tr>
-                      <th>Source Port</th>
-                      <td> {tcp.str_src_port} [{tcp.src_port}] </td>
-                    </tr>
-
-                    <tr>
-                      <th>Destination Port</th>
-                      <td> {tcp.str_dst_port} [{tcp.dst_port}] </td>
-                    </tr>
-
-                    <tr>
-                      <th>Sequence Number</th>
-                      <td>{tcp.seq}</td>
-                    </tr>
-
-                    <tr>
-                      <th>Ack Number</th>
-                      <td>{tcp.ack}</td>
-                    </tr>
-
-                    <tr>
-                      <th>Header Size</th>
-                      <td>{tcp.header_sz}</td>
-                    </tr>
-
-                    <tr>
-                      <th>Flags</th>
-                      <td>
-                        {[
-                          tcp.flags & 0x01 ? "FIN " : "",
-                          tcp.flags & 0x02 ? "SYN " : "",
-                          tcp.flags & 0x04 ? "RST " : "",
-                          tcp.flags & 0x08 ? "PSH " : "",
-
-                          tcp.flags & 0x10 ? "ACK " : "",
-                          tcp.flags & 0x20 ? "URG " : "",
-                          tcp.flags & 0x40 ? "ECE " : "",
-                          tcp.flags & 0x80 ? "CWR " : "",
-                        ].filter(Boolean).join(" ") || "0"
-                        }
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <th>Window</th>
-                      <td>{tcp.window}</td>
-                    </tr>
-
-                    <tr>
-                      <th>Checksum</th>
-                      <td>
-                        0x{tcp.ack != null ? tcp.checksum.toString(16)
-                        .toUpperCase().padStart(4, "0")
-                        : "-"}
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <th>Urgent Point</th>
-                      <td>{tcp.urgent}</td>
-                    </tr>
-
-
-                  </tbody>
-                </table>
-              </div>
-
-              <div style={{ 
-                  flex: "1 1 auto", 
-                  display: "flex", 
-                  flexDirection: "column",
-                  gap: "15px",
-                  minWidth: 0
-                }}>
-
-                <div style={{ flex: "1 1 auto", overflowX: "auto" }}>
-                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>TCP Header</div>
-                  <HexDump raw={tcp.raw} /> 
-                </div>
-
-              </div>
-
+      <div className="card-body udp-card-body">
+        {viewMode === "raw" ? (
+          <div className="raw-layout">
+            <div className="raw-layout-fields">
+              <table className="table table-bordered table-sm udp-table" style={{ fontSize: "14px" }}>
+                <tbody>
+                  <tr>
+                    <th colSpan="2" style={{ textAlign: "center" }}><b>TCP Header</b></th>
+                  </tr>
+                  <tr><th>Source Port</th><td>{port(tcp.src_port, tcp.str_src_port)}</td></tr>
+                  <tr><th>Destination Port</th><td>{port(tcp.dst_port, tcp.str_dst_port)}</td></tr>
+                  <tr><th>Sequence Number</th><td>{tcp.seq}</td></tr>
+                  <tr><th>Acknowledgment Number</th><td>{tcp.ack}</td></tr>
+                  <tr><th>Header Length</th><td>{headerLen} bytes ({headerLen / 4} words)</td></tr>
+                  <tr><th>Flags</th><td>{flagNames(tcp.flags)}</td></tr>
+                  <tr><th>Window</th><td>{tcp.window}</td></tr>
+                  <tr><th>Checksum</th><td>{hex4(tcp.checksum)}</td></tr>
+                  <tr><th>Urgent Pointer</th><td>{tcp.urgent}</td></tr>
+                  {optionsLen > 0 && <tr><th>Options</th><td>{optionsLen} bytes</td></tr>}
+                  <tr><th>Payload</th><td>{payloadLen} bytes</td></tr>
+                </tbody>
+              </table>
             </div>
-          ) : (
-            <table className="ip-table ">
-
-              <tbody>
-                <tr>
-                  <th colSpan="33" style={{ textAlign: "center" }}>
-                    <b>TCP Header</b>
-                  </th>
-                </tr>
-
-                {/* Header Row */}
-                <tr>
-                  <th style={{ borderLeft: "" }}>Octet</th>
-                  <th colSpan="8">0</th>
-                  <th colSpan="8">1</th>
-                  <th colSpan="8">2</th>
-                  <th colSpan="8">3</th>
-                </tr>
-
-                <tr>
-                  <th>Bit</th>
-                  {[...Array(32)].map((_, i) => (
-                    <th key={i}>{i}</th>
-                  ))}
-                </tr>
-
-                <tr>
-                  <th colSpan="2">0</th>
-                  <td colSpan="16"><i>Source Port: </i> {tcp.src_port}</td>
-                  <td colSpan="16"><i>Destination Port: </i> {tcp.dst_port}</td>
-                </tr>
-
-                <tr>
-                  <th colSpan="2">32</th>
-                  <td colSpan="32"><i>Sequence Number: </i>
-                  {tcp.seq}
+            <div className="raw-layout-dump">
+              {/* The header itself, options included (as UDP shows its 8 bytes) */}
+              <HexDump raw={[...(tcp.raw || []), ...(tcp.options || [])]} />
+            </div>
+          </div>
+        ) : (
+          <table className="bit-grid-table udp-table">
+            <BitGridHeader showOctet={true} />
+            <tbody>
+              <tr>
+                <th colSpan="2" className="field">0</th>
+                <td colSpan="16" className="field"><i>Source Port:</i> {port(tcp.src_port, tcp.str_src_port)}</td>
+                <td colSpan="16" className="field"><i>Destination Port:</i> {port(tcp.dst_port, tcp.str_dst_port)}</td>
+              </tr>
+              <tr>
+                <th colSpan="2" className="field">4</th>
+                <td colSpan="32" className="field"><i>Sequence Number:</i> {tcp.seq}</td>
+              </tr>
+              <tr>
+                <th colSpan="2" className="field">8</th>
+                <td colSpan="32" className="field"><i>Acknowledgment Number:</i> {tcp.ack}</td>
+              </tr>
+              <tr>
+                <th colSpan="2" className="field">12</th>
+                <td colSpan="4" className="field" title={`Data offset ${headerLen / 4} words = ${headerLen} bytes`}>
+                  <i>Off:</i> {headerLen / 4}
+                </td>
+                <td colSpan="4" className="field"><i>Rsv</i></td>
+                {FLAGS.map((f) => (
+                  <td
+                    key={f.name}
+                    className={`field tcp-flag${tcp.flags & f.bit ? " is-set" : ""}`}
+                    title={`${f.name} ${tcp.flags & f.bit ? "set" : "not set"}`}
+                  >
+                    {f.short}
                   </td>
-                </tr>
-
+                ))}
+                <td colSpan="16" className="field"><i>Window:</i> {tcp.window}</td>
+              </tr>
+              <tr>
+                <th colSpan="2" className="field">16</th>
+                <td colSpan="16" className="field"><i>Checksum:</i> {hex4(tcp.checksum)}</td>
+                <td colSpan="16" className="field"><i>Urgent Pointer:</i> {tcp.urgent}</td>
+              </tr>
+              {optionsLen > 0 && (
                 <tr>
-                  <th colSpan="2">64</th>
-                  <td colSpan="32"><i>Acknowledge Number: </i>{tcp.ack}</td>
+                  <th colSpan="2" className="field">20</th>
+                  <td colSpan="32" className="field"><i>Options:</i> {optionsLen} bytes</td>
                 </tr>
-
+              )}
+              {payloadLen > 0 && (
                 <tr>
-                  <th colSpan="2">96</th>
-                  <td colSpan="4"><i>Header Size:</i> {tcp.header_sz}</td>
-                  <td colSpan="4"><i>Reserved</i></td>
-                  <td colSpan="8"><i></i>{" "}
-                    {[
-                    tcp.flags & 0x01 ? "FIN " : "",
-                    tcp.flags & 0x02 ? "SYN " : "",
-                    tcp.flags & 0x04 ? "RST " : "",
-                    tcp.flags & 0x08 ? "PSH " : "",
-
-                    tcp.flags & 0x10 ? "ACK " : "",
-                    tcp.flags & 0x20 ? "URG " : "",
-                    tcp.flags & 0x40 ? "ECE " : "",
-                    tcp.flags & 0x80 ? "CWR " : "",
-                    ].filter(Boolean).join(" ") || "0"
-                    }
-                  </td>
-                  <td colSpan="16"><i>Window:</i> {tcp.window}</td>
+                  <th colSpan="2" className="field">{headerLen}</th>
+                  <td colSpan="32" className="field"><i>Data:</i> {payloadLen} bytes</td>
                 </tr>
-
-                <tr>
-                  <th colSpan="2">128</th>
-                  <td colSpan="16"><i>Checksum:</i> 
-                    {/* {tcp.ack} */}
-                    0x{tcp.ack != null ? tcp.checksum.toString(16)
-                    .toUpperCase().padStart(4, "0")
-                    : "-"}
-                  </td>
-
-                  <td colSpan="16"><i>Urgent Point:</i> 
-                    {tcp.urgent}
-                  </td>
-                </tr>
-
-                {tcp.payload ? (
-                  <>
-                    <tr>
-                      <th>128</th>
-                      <td colSpan="32"><i>Payload..</i> 
-                      </td>
-                    </tr>
-                  </>
-                ) : (
-                  <></>
-                )}
-
-              </tbody>
-            </table>
-          )}
-        </div>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }

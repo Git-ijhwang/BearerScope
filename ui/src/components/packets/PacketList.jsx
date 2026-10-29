@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ContextMenu from "../ContextMenu";
 import {
-  PROTO_FILTERS, canOpenFlow, filterPackets, protoFamily, protoLabel, splitDescription,
+  PROTO_FILTERS, canOpenFlow, filterPackets, protoFamily, protoLabel, splitDescription, startsSession,
 } from "./packetFormat";
 
 function Address({ ip, port }) {
@@ -36,8 +37,49 @@ export default function PacketList({
     onSelect(visible[next].id);
   };
 
+  // Right-click menu: { x, y, pkt } or null
+  const [menu, setMenu] = useState(null);
+  const scrollRef = useRef(null);
+  const closeMenu = useCallback(() => {
+    setMenu(null);
+    scrollRef.current?.focus({ preventScroll: true });
+  }, []);
+
+  const openMenu = (e, pkt) => {
+    e.preventDefault();
+    // onSelect(pkt.id);
+    setMenu({ x: e.clientX, y: e.clientY, pkt });
+  };
+
+  // Shift+F10 or the Menu key: open the menu under the selected row
+  const openMenuFromKeyboard = () => {
+    const pkt = visible.find((p) => p.id === selectedId);
+    const row = bodyRef.current?.querySelector(`tr[data-id="${selectedId}"]`);
+    if (!pkt || !row) return;
+    const r = row.getBoundingClientRect();
+    setMenu({ x: r.left + 120, y: r.bottom - 4, pkt });
+  };
+
+  const menuItems = (pkt) => [
+    {
+      id: "flow",
+      label: "Show call flow",
+      shortcut: "Enter",
+      disabled: !canOpenFlow(pkt),
+      hint: canOpenFlow(pkt) ? null : "GTPv2-C session messages only",
+      onSelect: () => onOpenFlow(pkt.id),
+    },
+    {
+      id: "window",
+      label: "Open in new window",
+      shortcut: "⇧ Enter",
+      onSelect: () => onOpenWindow(pkt),
+    },
+  ];
+
   const onKeyDown = (e) => {
-    if (e.key === "ArrowDown") { e.preventDefault(); move(1); }
+    if (e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) { e.preventDefault(); openMenuFromKeyboard(); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); move(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
     else if (e.key === "Enter") {
       const pkt = visible.find((p) => p.id === selectedId);
@@ -76,7 +118,7 @@ export default function PacketList({
         </div>
       </div>
 
-      <div className="packet-scroll" tabIndex={0} onKeyDown={onKeyDown}>
+      <div className="packet-scroll" tabIndex={0} onKeyDown={onKeyDown} ref={scrollRef}>
         {visible.length === 0 ? (
           <div className="list-empty">
             No packets match this filter.
@@ -110,9 +152,11 @@ export default function PacketList({
                     key={pkt.id}
                     data-id={pkt.id}
                     aria-selected={pkt.id === selectedId}
+                    data-menu={menu?.pkt.id === pkt.id || undefined}
                     onClick={() => onSelect(pkt.id)}
                     // onDoubleClick={() => canOpenFlow(pkt) && onOpenFlow(pkt.id)}
                     onDoubleClick={() => onOpenWindow(pkt)}
+                    onContextMenu={(e) => openMenu(e, pkt)}
                   >
                     <td className="col-no data">{pkt.id}</td>
                     {/*
@@ -133,9 +177,10 @@ export default function PacketList({
                       {text}{code && <span className="code">{code}</span>}
                     </td>
                     <td className="col-act">
-                      {canOpenFlow(pkt) && (
+                      {startsSession(pkt) && (
                         <button
-                          className="btn-flow"
+                          // Always shown where a session starts; on hover or selection elsewhere
+                          className={`btn-flow${startsSession(pkt) ? "" : " is-quiet"}`}
                           title="Show the call flow and bearer state for this session"
                           onClick={(e) => { e.stopPropagation(); onOpenFlow(pkt.id); }}
                         >
@@ -150,6 +195,16 @@ export default function PacketList({
           </table>
         )}
       </div>
+
+      {menu && (
+        <ContextMenu
+          x={menu.x}
+          y={menu.y}
+          items={menuItems(menu.pkt)}
+          onClose={closeMenu}
+          label={`Packet ${menu.pkt.id}`}
+        />
+      )}
 
       <div className="status-line">
         <span>{visible.length === packets.length ? `${packets.length} packets` : `${visible.length} of ${packets.length} packets`}</span>

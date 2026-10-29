@@ -96,9 +96,11 @@ fn parse_l4( next_type: usize,
         PROTO_TYPE_TCP =>  {
             let mut tcp = TcpInfo::new();
             let result= parse_single_tcp( data_buf , &mut tcp);
+            // The application layer starts after the options too
+            let hdr_len = (tcp.header_sz as usize).max(TCP_HDR_LEN);
 
             parsed_packet.l4 = Layer4Info::TCP(tcp);
-            (result, TCP_HDR_LEN)
+            (result, hdr_len)
         },
 
         PROTO_TYPE_UDP => {

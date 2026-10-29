@@ -20,8 +20,20 @@ export function splitDescription(desc = "") {
 }
 
 /** Call flow analysis currently starts from a Create Session Request. */
+// GTPv2-C messages that are not about a UE session: Echo Request/Response,
+// Version Not Supported Indication
+const GTPC_NODE_MESSAGES = new Set([1, 2, 3]);
+
+/** A Create Session Request: where a PDN connection starts */
+export function startsSession(pkt) {
+  return pkt.protocol === "GTP2-C" && /\[32\]\s*$/.test(pkt.description || "");
+}
+
+/** The call flow can start from any GTPv2-C message of a UE's session */
 export function canOpenFlow(pkt) {
-  return pkt.protocol === "GTP2-C" && pkt.description?.includes("Create Session Request");
+  if (pkt.protocol !== "GTP2-C") return false;
+  const code = Number(/\[(\d+)\]\s*$/.exec(pkt.description || "")?.[1]);
+  return !GTPC_NODE_MESSAGES.has(code);
 }
 
 export const PROTO_FILTERS = [

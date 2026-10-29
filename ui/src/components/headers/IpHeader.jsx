@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useId } from "react";
-import HexDump from '../hex-dump/HexDump';
+import HexDump from "./common/HexDump";
 import BitGridHeader from './common/BitGridHeader'; // 방금 만든 파일 임포트
 import "./IpHeader.css";
 
@@ -49,8 +49,8 @@ const IpHeader = ({ ip, depth }) => {
 
       <div className="protocol-card__body">
         {isRaw ? (
-          <div className="raw-view-container" style={{ display: "flex", gap: "15px" }} >
-            <div style={{ flex: "0 0 600px"}} className="summary-table-wrapper">
+          <div className="raw-layout">
+            <div className="raw-layout-fields">
               <table className="table-summary">
 
                 <thead>
@@ -71,7 +71,7 @@ const IpHeader = ({ ip, depth }) => {
                 </tbody>
               </table>
             </div>
-            <div className="hexdump-wrapper">
+            <div className="raw-layout-dump">
               <HexDump raw={ip.raw} />
             </div>
           </div>

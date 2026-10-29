@@ -215,26 +215,30 @@ impl  UdpInfo {
 #[derive(Serialize, Debug)]
 pub struct TcpInfo {
     pub src_port: u16,
-    pub src_port_str: String,
+    pub str_src_port: String,
     pub dst_port: u16,
-    pub dst_port_str: String,
+    pub str_dst_port: String,
     pub seq: u32,
     pub ack: u32,
+    /// Header length in bytes (data offset x 4), options included
     pub header_sz: u8,
     pub flags: u8,
     pub window: u16,
     pub checksum: u16,
     pub urgent: u16,
+    /// The fixed 20-byte header
     pub raw: Vec<u8>,
+    /// Options between the fixed header and the data (header_sz - 20 bytes)
+    pub options: Vec<u8>,
     pub payload: Option<Vec<u8>>,
 }
 impl  TcpInfo {
     pub fn new() -> Self {
         TcpInfo {
             src_port: 0,
-            src_port_str: String::new(),
+            str_src_port: String::new(),
             dst_port: 0,
-            dst_port_str: String::new(),
+            str_dst_port: String::new(),
             seq: 0,
             ack: 0,
             header_sz: 0,
@@ -243,6 +247,7 @@ impl  TcpInfo {
             checksum: 0,
             urgent: 0,
             raw: Vec::new(),
+            options: Vec::new(),
             payload: None,
         }
     }

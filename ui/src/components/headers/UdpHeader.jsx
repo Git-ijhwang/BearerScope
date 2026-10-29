@@ -1,6 +1,6 @@
 import React, { useState, useId } from "react";
 import "./UdpHeader.css";
-import HexDump from '../hex-dump/HexDump';
+import HexDump from "./common/HexDump";
 import BitGridHeader from './common/BitGridHeader'; // 방금 만든 파일 임포트
 
 
@@ -42,8 +42,8 @@ export default function UdpHeader({ udp }) {
       <div className="card-body udp-card-body">
         {viewMode === "raw" ? (
 
-          <div style={{ display: "flex", gap: "15px" }}>
-            <div style={{ flex: "0 0 600px" }}>
+          <div className="raw-layout">
+            <div className="raw-layout-fields">
 
               <table className="table table-bordered table-sm udp-table" style={{ fontSize: "14px" }}>
                 <tbody>
@@ -81,17 +81,9 @@ export default function UdpHeader({ udp }) {
               </table>
             </div>
 
-            <div style={{ flex: "1 1 auto", display: "flex", 
-                flexDirection: "column", gap: "15px", minWidth: 0 }}>
-
-              <div style={{ flex: "1 1 auto", overflowX: "auto" }}>
-                <div style={{ fontWeight: "bold", marginBottom: "5px" }}>UDP Header</div>
-                <HexDump raw={udp.raw} /> 
-              </div>
-
-
+            <div className="raw-layout-dump">
+              <HexDump raw={udp.raw} />
             </div>
-
           </div>
         ) : (
           <table className="bit-grid-table udp-table">
@@ -126,7 +118,7 @@ export default function UdpHeader({ udp }) {
               </tr>
 
               <tr>
-                <th colSpan="2" className="field">32</th>
+                <th colSpan="2" className="field">4</th>
                 <td colSpan="16" className="field"><i>Length:</i> {udp.length}</td>
                 <td colSpan="16" className="field"><i>Checksum:0x</i>
                   {/* {udp.checksum} */}
